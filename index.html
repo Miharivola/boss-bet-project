@@ -3,55 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boss Bet - Ultra Predictor</title>
+    <title>Boss Bet - Predictor</title>
     <style>
         :root { --red: #ff3131; --dark: #121212; --card: #1e1e1e; --grey: #2a2a2a; }
         body { background-color: var(--dark); color: white; font-family: sans-serif; margin: 0; padding: 10px; text-align: center; }
         .page { display: none; max-width: 400px; margin: auto; }
         .active { display: block; }
         .card { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #333; }
-        .input-box { background: var(--grey); padding: 15px; border-radius: 10px; margin: 10px 0; font-family: 'Courier New', monospace; font-size: 1.4rem; color: #fff; min-height: 30px;}
-        .label { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Input boxes azo kitihina */
+        .input-box { 
+            background: var(--grey); 
+            padding: 15px; 
+            border-radius: 10px; 
+            margin: 10px 0; 
+            font-family: monospace; 
+            font-size: 1.4rem; 
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.3s;
+        }
+        .active-input { border: 2px solid var(--red); background: #331a1a; }
+        
+        .label { color: #888; font-size: 0.8rem; margin-top: 10px; }
         .keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 20px; }
         .key { background: #333; padding: 18px 5px; border-radius: 8px; cursor: pointer; border: none; color: white; font-weight: bold; font-size: 1.1rem; }
+        .key:active { background: #555; }
         .key-red { background: var(--red); grid-column: span 2; }
-        .big-timer { font-size: 4rem; font-weight: bold; color: var(--red); margin: 20px 0; }
+        
         nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #1a1a1a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
-        .nav-item { font-size: 1.5rem; cursor: pointer; }
-        .active-input { border: 1px solid var(--red); box-shadow: 0 0 5px var(--red); }
     </style>
 </head>
 <body>
 
     <div id="page1" class="page active">
-        <h2 style="color:var(--red); margin-bottom:5px;">BOSS BET</h2>
-        <p style="color:gray; font-size:0.7rem; margin-top:0;">AVIATOR PREDICTOR</p>
+        <h2 style="color:var(--red)">BOSS BET</h2>
         
         <div class="card">
             <div class="label">ORA FIAINGANA</div>
-            <div id="time-display" class="input-box active-input">00 : 00 : 00</div>
+            <div id="box-time" class="input-box active-input" onclick="setFocus('time')">00 : 00 : 00</div>
             
             <div class="label">VOAN'NY SERVER</div>
-            <div id="hex-display" class="input-box">6 litera hex</div>
+            <div id="box-hex" class="input-box" onclick="setFocus('hex')">6 litera hex</div>
 
             <div class="keypad">
-                <button class="key" onclick="tap('1')">1</button><button class="key" onclick="press('2')">2</button><button class="key" onclick="tap('3')">3</button><button class="key" onclick="tap('4')">4</button><button class="key" onclick="tap('5')">5</button>
-                <button class="key" onclick="tap('6')">6</button><button class="key" onclick="tap('7')">7</button><button class="key" onclick="tap('8')">8</button><button class="key" onclick="tap('9')">9</button><button class="key" onclick="tap('0')">0</button>
-                <button class="key" onclick="tap('A')">A</button><button class="key" onclick="tap('B')">B</button><button class="key" onclick="tap('C')">C</button><button class="key" onclick="tap('D')">D</button><button class="key" onclick="tap('E')">E</button>
-                <button class="key" onclick="tap('F')">F</button>
-                <button class="key key-red" onclick="resetAll()">Fafana</button>
-                <button class="key key-red" onclick="validate()">VINAVINA</button>
+                <button class="key" onclick="typeIn('1')">1</button>
+                <button class="key" onclick="typeIn('2')">2</button>
+                <button class="key" onclick="typeIn('3')">3</button>
+                <button class="key" onclick="typeIn('4')">4</button>
+                <button class="key" onclick="typeIn('5')">5</button>
+                <button class="key" onclick="typeIn('6')">6</button>
+                <button class="key" onclick="typeIn('7')">7</button>
+                <button class="key" onclick="typeIn('8')">8</button>
+                <button class="key" onclick="typeIn('9')">9</button>
+                <button class="key" onclick="typeIn('0')">0</button>
+                <button class="key" onclick="typeIn('A')">A</button>
+                <button class="key" onclick="typeIn('B')">B</button>
+                <button class="key" onclick="typeIn('C')">C</button>
+                <button class="key" onclick="typeIn('D')">D</button>
+                <button class="key" onclick="typeIn('E')">E</button>
+                <button class="key" onclick="typeIn('F')">F</button>
+                <button class="key key-red" onclick="erase()">Fafana</button>
+                <button class="key key-red" onclick="alert('Vinavina: ' + (Math.random()*3+1).toFixed(2)+'x')">VINAVINA</button>
             </div>
         </div>
-    </div>
-
-    <div id="page2" class="page">
-        <h2 style="color:var(--red)">SIGNAL LIVE</h2>
-        <div class="big-timer" id="live-clock">00:00:00</div>
-        <div style="font-size: 2rem; background: var(--card); padding: 20px; border-radius: 15px;">
-            VOKATRY: <span id="vokatra" style="color:var(--red)">--</span>
-        </div>
-        <button onclick="location.reload()" style="margin-top:20px; background:none; border:1px solid gray; color:gray; padding:10px; border-radius:5px;">Hiverina</button>
     </div>
 
     <nav>
@@ -61,66 +76,47 @@
     </nav>
 
     <script>
-        let timeInput = ""; // Max 6 digits (HHMMSS)
-        let hexInput = "";  // Max 6 chars
-        
-        function tap(val) {
-            // Raha mbola tsy feno 6 ny lera, dia lera no fenoina
-            if (timeInput.length < 6) {
-                if (!isNaN(val)) { // Isa ihany no azo ampidirina amin'ny lera
-                    timeInput += val;
-                    updateDisplays();
+        let currentFocus = 'time';
+        let timeData = "";
+        let hexData = "";
+
+        // Mifidy izay boaty hofenoina
+        function setFocus(target) {
+            currentFocus = target;
+            document.getElementById('box-time').classList.remove('active-input');
+            document.getElementById('box-hex').classList.remove('active-input');
+            document.getElementById('box-' + target).classList.add('active-input');
+        }
+
+        function typeIn(val) {
+            if (currentFocus === 'time') {
+                if (timeData.length < 6 && !isNaN(val)) {
+                    timeData += val;
                 }
-            } 
-            // Raha efa feno ny lera, dia ny HEX indray no fenoina
-            else if (hexInput.length < 6) {
-                hexInput += val;
-                updateDisplays();
+            } else {
+                if (hexData.length < 6) {
+                    hexData += val;
+                }
             }
+            render();
         }
 
-        function updateDisplays() {
-            // Update Time Display
-            let h = timeInput.substring(0, 2).padEnd(2, '0');
-            let m = timeInput.substring(2, 4).padEnd(2, '0');
-            let s = timeInput.substring(4, 6).padEnd(2, '0');
-            document.getElementById('time-display').innerText = `${h} : ${m} : ${s}`;
+        function erase() {
+            if (currentFocus === 'time') timeData = timeData.slice(0, -1);
+            else hexData = hexData.slice(0, -1);
+            render();
+        }
+
+        function render() {
+            // Render Time
+            let h = (timeData.substring(0,2) || "00").padEnd(2, '0');
+            let m = (timeData.substring(2,4) || "00").padEnd(2, '0');
+            let s = (timeData.substring(4,6) || "00").padEnd(2, '0');
+            document.getElementById('box-time').innerText = `${h} : ${m} : ${s}`;
             
-            // Update Hex Display
-            document.getElementById('hex-display').innerText = hexInput || "6 litera hex";
-
-            // Hanova ny loko "active"
-            if(timeInput.length < 6) {
-                document.getElementById('time-display').classList.add('active-input');
-                document.getElementById('hex-display').classList.remove('active-input');
-            } else {
-                document.getElementById('time-display').classList.remove('active-input');
-                document.getElementById('hex-display').classList.add('active-input');
-            }
+            // Render Hex
+            document.getElementById('box-hex').innerText = hexData || "6 litera hex";
         }
-
-        function resetAll() {
-            timeInput = "";
-            hexInput = "";
-            updateDisplays();
-        }
-
-        function validate() {
-            if (timeInput.length === 6) {
-                document.getElementById('page1').classList.remove('active');
-                document.getElementById('page2').classList.add('active');
-                // Simulation vinavina
-                document.getElementById('vokatra').innerText = (Math.random() * 4 + 1.1).toFixed(2) + "x";
-            } else {
-                alert("Fenoy tsara ny lera (6 isa)");
-            }
-        }
-
-        // Famantaranandro mandeha hoazy amin'ny page 2
-        setInterval(() => {
-            let d = new Date();
-            document.getElementById('live-clock').innerText = d.toLocaleTimeString('fr-FR');
-        }, 1000);
     </script>
 </body>
 </html>

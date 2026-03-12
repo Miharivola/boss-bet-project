@@ -3,38 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boss Bet - Predictor Live</title>
+    <title>Boss Bet - Predictor Pro</title>
     <style>
         :root { --red: #ff3131; --dark: #121212; --card: #1e1e1e; --grey: #2a2a2a; }
         body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; padding: 0; text-align: center; }
         .container { max-width: 450px; margin: auto; padding-bottom: 80px; }
         
-        /* Navigation Pejy */
+        /* Pejy */
         .page { display: none; padding: 20px; animation: fadeIn 0.3s; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Style Predictor Form */
-        .card { background: var(--card); border-radius: 20px; padding: 15px; border: 1px solid #333; margin-top: 10px; }
-        .input-box { background: var(--grey); padding: 15px; border-radius: 10px; margin: 10px 0; font-family: monospace; font-size: 1.4rem; border: 2px solid transparent; cursor: pointer; }
-        .selected { border: 2px solid var(--red); background: #331a1a; }
+        /* Famantaranandro kely eo ambony */
+        .live-clock-mini { 
+            background: #222; border: 1px solid #444; color: #00ff00; 
+            display: inline-block; padding: 5px 15px; border-radius: 5px; 
+            font-family: monospace; font-size: 1.2rem; margin-bottom: 15px;
+        }
+
+        /* Form style */
+        .card { background: var(--card); border-radius: 20px; padding: 15px; border: 1px solid #333; }
+        .input-box { background: var(--grey); padding: 15px; border-radius: 10px; margin: 10px 0; font-family: monospace; font-size: 1.4rem; border: 2px solid transparent; cursor: pointer; color: #aaa; }
+        .selected { border: 2px solid var(--red); background: #331a1a; color: white; }
         
         /* Keypad */
         .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 15px; }
         .key { background: #333; padding: 15px; border-radius: 8px; border: none; color: white; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
-        .btn-red { background: var(--red); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; font-size: 1rem; }
+        .btn-red { background: var(--red); color: white; border: none; padding: 18px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 15px; font-size: 1.1rem; }
 
-        /* DISPLAY RESULTAT (SIGNAL LIVE) */
-        .result-screen { background: radial-gradient(circle, #2a1515, #121212); border-radius: 20px; padding: 30px 10px; position: relative; border: 1px solid #444; }
-        .lion-bg { font-size: 5rem; opacity: 0.2; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; }
-        .live-tag { background: var(--red); padding: 5px 15px; border-radius: 5px; font-size: 0.9rem; font-weight: bold; display: inline-block; margin-bottom: 10px; }
-        .big-timer { font-size: 4.5rem; color: var(--red); font-weight: bold; margin: 15px 0; z-index: 1; position: relative; }
-        .tour-type { border: 1px solid white; padding: 10px 20px; border-radius: 25px; display: inline-block; margin-top: 10px; font-weight: bold; }
+        /* Screen Signal Live */
+        .result-screen { background: radial-gradient(circle, #2a1515, #121212); border-radius: 20px; padding: 40px 10px; border: 1px solid #444; position: relative; overflow: hidden; }
+        .lion-bg { font-size: 8rem; opacity: 0.1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; }
+        .big-timer { font-size: 4rem; color: var(--red); font-weight: bold; margin: 20px 0; position: relative; z-index: 1; }
+        .prediction-val { font-size: 2.5rem; font-weight: bold; color: white; position: relative; z-index: 1; }
 
         /* Nav Bottom */
         nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: #1a1a1a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 100; }
-        .nav-item { font-size: 1.6rem; cursor: pointer; opacity: 0.4; transition: 0.3s; }
-        .nav-active { opacity: 1; color: var(--red); transform: scale(1.2); }
+        .nav-item { font-size: 1.6rem; cursor: pointer; opacity: 0.4; }
+        .nav-active { opacity: 1; color: var(--red); }
     </style>
 </head>
 <body>
@@ -42,9 +48,13 @@
     <div class="container">
         
         <div id="p-home" class="page active">
-            <h2 style="color:var(--red);">BOSS BET</h2>
+            <h2 style="color:var(--red); margin-bottom: 5px;">BOSS BET</h2>
+            <p style="font-size: 0.8rem; color: #888; margin-bottom: 20px;">AVIATOR PREDICTOR</p>
+
+            <div class="live-clock-mini" id="mini-clock">00:00:00</div>
+
             <div class="card">
-                <small style="color:#888">ORA FIAINGANA</small>
+                <small style="color:#888">ORA FIAINGANA (HH:MM:SS)</small>
                 <div id="box-time" class="input-box selected" onclick="mifidy('time')">00 : 00 : 00</div>
                 
                 <small style="color:#888">VOAN'NY SERVER (HEX)</small>
@@ -54,44 +64,37 @@
                     <button class="key" onclick="press('1')">1</button><button class="key" onclick="press('2')">2</button><button class="key" onclick="press('3')">3</button><button class="key" onclick="press('4')">4</button>
                     <button class="key" onclick="press('5')">5</button><button class="key" onclick="press('6')">6</button><button class="key" onclick="press('7')">7</button><button class="key" onclick="press('8')">8</button>
                     <button class="key" onclick="press('9')">9</button><button class="key" onclick="press('0')">0</button><button class="key" onclick="press('A')">A</button><button class="key" onclick="press('B')">B</button>
-                    <button class="key" onclick="press('C')">C</button><button class="key" onclick="press('D')">D</button><button class="key" onclick="press('E')">E</button><button class="key" onclick="press('F')">F</button>
                 </div>
+                
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button class="btn-red" style="background: #444;" onclick="mamafa()">FAFAFA</button>
-                    <button class="btn-red" onclick="vinavina()">VINAVINA</button>
+                    <button class="key" style="background: #555; flex: 1;" onclick="mamafa()">Fafana</button>
+                    <button class="key" style="background: #333; flex: 1;" onclick="resetAll()">Foana</button>
                 </div>
+
+                <button class="btn-red" onclick="manaoVinavina()">🎯 VINAVINA</button>
             </div>
         </div>
 
         <div id="p-result" class="page">
-            <h2 style="color:var(--red);">BOSS BET</h2>
             <div class="result-screen">
                 <div class="lion-bg">🦁</div>
-                <div class="live-tag">🎯 SIGNAL LIVE</div>
-                <div id="vokatra-isa" style="font-size: 2rem; font-weight: bold; margin-bottom: 5px;">2.50</div>
-                <div class="big-timer" id="big-clock">00:00:00</div>
-                <div class="tour-type">🤍 TOUR TSARA</div>
-                
-                <div style="display: flex; justify-content: space-around; margin-top: 25px;">
-                    <div style="color:var(--red)">❤️ 4.12x</div>
-                    <div style="color:gray">🖤 6.50x</div>
-                    <div style="color:#e056fd">💜 155x</div>
+                <div style="color: var(--red); font-weight: bold; letter-spacing: 2px;">SIGNAL LIVE</div>
+                <div class="big-timer" id="result-clock">00:00:00</div>
+                <div class="prediction-val" id="val-x">1.00x</div>
+                <div style="margin-top: 20px; border: 1px solid #555; display: inline-block; padding: 5px 20px; border-radius: 20px;">
+                    🤍 TOUR TSARA
                 </div>
             </div>
-            <button class="btn-red" onclick="go('p-home', 'nav-home')">HIVERINA</button>
+            <button class="btn-red" style="background: #444;" onclick="go('p-home')">HIVERINA</button>
         </div>
-
-        <div id="p-stats" class="page"><h2>STATISTIQUES</h2><p>Mbola eo am-panamboarana...</p></div>
-        <div id="p-history" class="page"><h2>HISTORIQUE</h2><p>Tsy misy tantara aloha...</p></div>
-        <div id="p-account" class="page"><h2>MON COMPTE</h2><p>Admin Profile</p></div>
 
     </div>
 
     <nav>
-        <div id="nav-home" class="nav-item nav-active" onclick="go('p-home', 'nav-home')">🏠</div>
-        <div id="nav-stats" class="nav-item" onclick="go('p-stats', 'nav-stats')">📊</div>
-        <div id="nav-hist" class="nav-item" onclick="go('p-history', 'nav-hist')">📜</div>
-        <div id="nav-acc" class="nav-item" onclick="go('p-account', 'nav-acc')">👤</div>
+        <div class="nav-item nav-active">🏠</div>
+        <div class="nav-item">📊</div>
+        <div class="nav-item">📜</div>
+        <div class="nav-item">👤</div>
     </nav>
 
     <script>
@@ -99,58 +102,58 @@
         let tData = ""; 
         let hData = "";
 
-        function go(pageId, navId) {
+        // Famantaranandro mandeha amin'ny fotoana rehetra
+        setInterval(() => {
+            let d = new Date();
+            let s = d.getHours().toString().padStart(2,'0') + ":" + 
+                    d.getMinutes().toString().padStart(2,'0') + ":" + 
+                    d.getSeconds().toString().padStart(2,'0');
+            document.getElementById('mini-clock').innerText = s;
+            document.getElementById('result-clock').innerText = s;
+        }, 1000);
+
+        function go(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('nav-active'));
-            document.getElementById(pageId).classList.add('active');
-            if(navId) document.getElementById(navId).classList.add('nav-active');
+            document.getElementById(id).classList.add('active');
         }
 
-        function mifidy(target) {
-            focus = target;
-            document.getElementById('box-time').classList.toggle('selected', target === 'time');
-            document.getElementById('box-hex').classList.toggle('selected', target === 'hex');
+        function mifidy(t) {
+            focus = t;
+            document.getElementById('box-time').classList.toggle('selected', t === 'time');
+            document.getElementById('box-hex').classList.toggle('selected', t === 'hex');
         }
 
-        function press(val) {
-            if(focus === 'time' && tData.length < 6) tData += val;
-            else if(focus === 'hex' && hData.length < 6) hData += val;
-            update();
+        function press(v) {
+            if(focus === 'time' && tData.length < 6) tData += v;
+            else if(focus === 'hex' && hData.length < 6) hData += v;
+            render();
         }
 
         function mamafa() {
             if(focus === 'time') tData = tData.slice(0, -1);
             else hData = hData.slice(0, -1);
-            update();
+            render();
         }
 
-        function update() {
-            let h = (tData.substring(0,2) || "00").padEnd(2, '0');
-            let m = (tData.substring(2,4) || "00").padEnd(2, '0');
-            let s = (tData.substring(4,6) || "00").padEnd(2, '0');
-            document.getElementById('box-time').innerText = h + " : " + m + " : " + s;
-            document.getElementById('box-hex').innerText = hData || "HEX CODE";
+        function resetAll() { tData = ""; hData = ""; render(); }
+
+        function render() {
+            let h = (tData.substring(0,2) || "HH").padEnd(2, ' ');
+            let m = (tData.substring(2,4) || "MM").padEnd(2, ' ');
+            let s = (tData.substring(4,6) || "SS").padEnd(2, ' ');
+            document.getElementById('box-time').innerText = `${h} : ${m} : ${s}`;
+            document.getElementById('box-hex').innerText = hData || "6 litera hex";
         }
 
-        // Ity no mampiseho ilay sary LIVE fa tsy "alert" intsony
-        function vinavina() {
-            if(tData.length < 6) { alert("Fenoy tsara ny lera!"); return; }
+        function manaoVinavina() {
+            if(tData.length < 6) { alert("Ampidiro tsara ny lera (Ora, Minitra, Segondra)"); return; }
             
-            // Simulation ny vokatra
-            let randomX = (Math.random() * 4 + 1.1).toFixed(2);
-            document.getElementById('vokatra-isa').innerText = randomX;
+            // Generate isa kisendrasendra ho an'ny Aviator
+            let res = (Math.random() * (10.0 - 1.2) + 1.2).toFixed(2);
+            document.getElementById('val-x').innerText = res + "x";
             
-            go('p-result'); // Miditra amin'ilay pejy misy sary LIVE
+            go('p-result');
         }
-
-        // Famantaranandro mivoatra (Real-time clock)
-        setInterval(() => {
-            let now = new Date();
-            let clockStr = now.getHours().toString().padStart(2, '0') + ":" + 
-                           now.getMinutes().toString().padStart(2, '0') + ":" + 
-                           now.getSeconds().toString().padStart(2, '0');
-            document.getElementById('big-clock').innerText = clockStr;
-        }, 1000);
     </script>
 </body>
 </html>

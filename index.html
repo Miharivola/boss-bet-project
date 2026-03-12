@@ -1,18 +1,115 @@
 <!DOCTYPE html>
-<html>
-<body style="background-color:black; color:red; text-align:center; font-family:sans-serif;">
-    <h1>BOSS BET</h1>
-    <p>ADMIN PREDICTOR</p>
-    <div style="border: 2px solid red; padding: 20px; margin: 20px; border-radius: 20px;">
-        <h2 id="isa" style="font-size: 50px;">1.00x</h2>
+<html lang="mg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boss Bet - Ultra Predictor</title>
+    <style>
+        :root { --red: #ff3131; --dark: #121212; --card: #1e1e1e; }
+        body { background-color: var(--dark); color: white; font-family: sans-serif; margin: 0; padding: 10px; text-align: center; }
+        
+        /* Containers */
+        .page { display: none; max-width: 400px; margin: auto; }
+        .active { display: block; }
+        .card { background: var(--card); border-radius: 15px; padding: 20px; margin-bottom: 15px; border: 1px solid #333; }
+
+        /* Inputs & Keypad */
+        .input-box { background: #2a2a2a; padding: 15px; border-radius: 10px; margin: 10px 0; font-family: monospace; font-size: 1.2rem; }
+        .keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 15px; }
+        .key { background: #333; padding: 15px 5px; border-radius: 8px; cursor: pointer; border: none; color: white; font-weight: bold; }
+        .key-red { background: var(--red); }
+
+        /* Timer & Prediction */
+        .big-timer { font-size: 4rem; font-weight: bold; color: var(--red); margin: 20px 0; text-shadow: 0 0 20px rgba(255,49,49,0.5); }
+        .btn-live { background: var(--red); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
+        
+        /* Stats List */
+        .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #333; text-align: left; }
+        .time-label { color: var(--red); font-weight: bold; font-size: 1.1rem; }
+        .tag { padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: bold; }
+        .tag-green { background: #2ecc71; color: black; }
+        .tag-white { background: white; color: black; }
+
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #1a1a1a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
+        .nav-item { cursor: pointer; font-size: 1.5rem; }
+    </style>
+</head>
+<body>
+
+    <div id="page1" class="page active">
+        <h3 style="color:var(--red)">BOSS BET</h3>
+        <p style="font-size:0.7rem; color:gray">AVIATOR PREDICTOR</p>
+        <div class="card">
+            <small>ORA FIAINGANA</small>
+            <div class="input-box">HH : MM : SS</div>
+            <small>VOAN'NY SERVER</small>
+            <div id="hex-input" class="input-box">6 litera hex</div>
+            <div class="keypad">
+                <button class="key" onclick="press('1')">1</button><button class="key" onclick="press('2')">2</button><button class="key" onclick="press('3')">3</button><button class="key" onclick="press('4')">4</button><button class="key" onclick="press('5')">5</button>
+                <button class="key" onclick="press('6')">6</button><button class="key" onclick="press('7')">7</button><button class="key" onclick="press('8')">8</button><button class="key" onclick="press('9')">9</button><button class="key" onclick="press('0')">0</button>
+                <button class="key" onclick="press('A')">A</button><button class="key" onclick="press('B')">B</button><button class="key" onclick="press('C')">C</button><button class="key" onclick="press('D')">D</button><button class="key" onclick="press('E')">E</button>
+                <button class="key" onclick="press('F')">F</button>
+                <button class="key key-red" style="grid-column: span 2" onclick="clearHex()">Fafana</button>
+                <button class="key key-red" style="grid-column: span 2" onclick="showPage('page2')">VINAVINA</button>
+            </div>
+        </div>
     </div>
-    <button onclick="mivoaka()" style="background:red; color:white; padding: 15px; border-radius: 10px; border:none; width: 80%; font-weight:bold;">🎯 SIGNAL LIVE</button>
-    
+
+    <div id="page2" class="page">
+        <div class="input-box">2.17</div>
+        <button class="btn-live">🎯 SIGNAL LIVE</button>
+        <div class="big-timer" id="timer">08:42:56</div>
+        <div class="card" style="border: 1px solid white; display: inline-block; padding: 10px 30px;">
+            ❤️ TOUR TSARA
+        </div>
+        <div style="margin-top: 20px; display: flex; justify-content: space-around;">
+            <span>❤️ 3.94x</span> <span>🖤 6.20x</span> <span>💖 226.00x</span>
+        </div>
+    </div>
+
+    <div id="page3" class="page">
+        <p>5 PREDICTIONS SUCCESSIVES</p>
+        <div class="card" style="padding:0">
+            <div class="stat-row">
+                <div><span class="time-label">08:42:57</span><br><small>❤️ 4.96x 🖤 7.78x 💖 133.00x</small></div>
+                <span class="tag tag-green">💚 TOUR VERT</span>
+            </div>
+            <div class="stat-row">
+                <div><span class="time-label">08:43:56</span><br><small>❤️ 1.68x 🖤 2.42x 💖 87.00x</small></div>
+                <span class="tag tag-white">🤍 TOUR TSARA</span>
+            </div>
+        </div>
+    </div>
+
+    <nav>
+        <div class="nav-item" onclick="showPage('page1')">🏠</div>
+        <div class="nav-item" onclick="showPage('page3')">📊</div>
+        <div class="nav-item" onclick="showPage('page2')">🎯</div>
+    </nav>
+
     <script>
-        function mivoaka() {
-            var vokatry = (Math.random() * 5 + 1).toFixed(2);
-            document.getElementById("isa").innerHTML = vokatry + "x";
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
         }
+
+        let hex = "";
+        function press(val) {
+            if(hex.length < 6) {
+                hex += val;
+                document.getElementById('hex-input').innerText = hex;
+            }
+        }
+        function clearHex() { hex = ""; document.getElementById('hex-input').innerText = "6 litera hex"; }
+
+        // Simulation famantaranandro
+        setInterval(() => {
+            let now = new Date();
+            let h = String(now.getHours()).padStart(2, '0');
+            let m = String(now.getMinutes()).padStart(2, '0');
+            let s = String(now.getSeconds()).padStart(2, '0');
+            if(document.getElementById('timer')) document.getElementById('timer').innerText = `${h}:${m}:${s}`;
+        }, 1000);
     </script>
 </body>
 </html>

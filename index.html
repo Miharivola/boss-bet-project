@@ -3,146 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boss Bet - Pro</title>
+    <title>Boss Bet - Pro Predictor</title>
     <style>
         :root { --red: #ff3131; --dark: #121212; --card: #1e1e1e; --grey: #2a2a2a; }
-        body { background-color: var(--dark); color: white; font-family: sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
-        
-        .container { max-width: 450px; margin: auto; padding-bottom: 80px; }
-        .page { display: none; padding: 20px; text-align: center; animation: fadeIn 0.3s; }
+        body { background-color: var(--dark); color: white; font-family: sans-serif; margin: 0; padding: 0; text-align: center; }
+        .container { max-width: 450px; margin: auto; padding: 20px; padding-bottom: 80px; }
+        .page { display: none; animation: fadeIn 0.3s; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Style Card & Inputs */
-        .card { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #333; margin-bottom: 15px; }
-        .input-box { background: var(--grey); padding: 15px; border-radius: 10px; margin: 10px 0; font-family: monospace; font-size: 1.4rem; border: 2px solid transparent; cursor: pointer; }
-        .active-input { border: 2px solid var(--red); }
+        /* Boaty azo kitihina */
+        .card { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #333; }
+        .input-box { 
+            background: var(--grey); padding: 15px; border-radius: 10px; margin: 10px 0; 
+            font-family: monospace; font-size: 1.4rem; border: 2px solid transparent; cursor: pointer;
+        }
+        .active-input { border: 2px solid var(--red); background: #2a1515; }
         
         /* Keypad */
         .keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 15px; }
-        .key { background: #333; padding: 15px 5px; border-radius: 8px; border: none; color: white; font-weight: bold; }
-        .btn-main { background: var(--red); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; margin-top: 10px; }
-
-        /* Stats & History Style */
-        .stat-item { background: var(--grey); padding: 15px; border-radius: 15px; display: flex; flex-direction: column; align-items: center; }
-        .hist-row { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--red); }
-        .tag { font-size: 0.7rem; padding: 3px 8px; border-radius: 5px; background: #444; }
+        .key { background: #333; padding: 15px 5px; border-radius: 8px; border: none; color: white; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
+        .key:active { background: #555; }
+        .btn-red { background: var(--red); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .full-width { width: 100%; margin-top: 10px; font-size: 1.1rem; }
 
         /* Nav Bottom */
         nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: #1a1a1a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
-        .nav-item { font-size: 1.5rem; filter: grayscale(1); cursor: pointer; transition: 0.3s; }
-        .nav-active { filter: grayscale(0); transform: scale(1.2); }
+        .nav-item { font-size: 1.5rem; cursor: pointer; opacity: 0.5; }
+        .nav-active { opacity: 1; transform: scale(1.1); }
     </style>
 </head>
 <body>
 
     <div class="container">
         
-        <div id="p-account" class="page">
-            <h3 style="color:var(--red)">MON COMPTE</h3>
-            <div class="card">
-                <div style="width: 80px; height: 80px; background: #444; border-radius: 50%; margin: 0 auto 10px; border: 3px solid var(--red); display: flex; align-items: center; justify-content: center; font-size: 2rem;">B</div>
-                <h4>Boss Bet <small>👑 ADMIN</small></h4>
-                <div style="text-align: left; background: #222; padding: 10px; border-radius: 10px;">
-                    <small>⌛ Abonnement</small>
-                    <span style="float: right; color: var(--red);">29959 jours</span>
-                </div>
-                <div style="margin-top: 15px;">
-                    <button class="btn-main" style="background:#444">Fiteny: Malagasy</button>
-                    <button class="btn-main" style="margin-top:10px">DÉCONNEXION</button>
-                </div>
-            </div>
-        </div>
-
         <div id="p-home" class="page active">
-            <h3 style="color:var(--red)">BOSS BET</h3>
+            <h2 style="color:var(--red); margin-bottom: 5px;">BOSS BET</h2>
+            <p style="color:gray; font-size:0.8rem; margin-top:0;">AVIATOR PREDICTOR</p>
+
             <div class="card">
-                <small>ORA FIAINGANA</small>
+                <small style="color:#888">ORA FIAINGANA</small>
                 <div id="box-time" class="input-box active-input" onclick="setFocus('time')">00 : 00 : 00</div>
-                <small>VOAN'NY SERVER</small>
+                
+                <small style="color:#888">VOAN'NY SERVER</small>
                 <div id="box-hex" class="input-box" onclick="setFocus('hex')">6 litera hex</div>
-                <div class="keypad" id="main-keypad">
-                    </div>
-                <button class="btn-main" onclick="alert('Mikaroka vokatry...')">VINAVINA</button>
+
+                <div class="keypad">
+                    <button class="key" onclick="typeIn('1')">1</button>
+                    <button class="key" onclick="typeIn('2')">2</button>
+                    <button class="key" onclick="typeIn('3')">3</button>
+                    <button class="key" onclick="typeIn('4')">4</button>
+                    <button class="key" onclick="typeIn('5')">5</button>
+                    <button class="key" onclick="typeIn('6')">6</button>
+                    <button class="key" onclick="typeIn('7')">7</button>
+                    <button class="key" onclick="typeIn('8')">8</button>
+                    <button class="key" onclick="typeIn('9')">9</button>
+                    <button class="key" onclick="typeIn('0')">0</button>
+                    <button class="key" onclick="typeIn('A')">A</button>
+                    <button class="key" onclick="typeIn('B')">B</button>
+                    <button class="key" onclick="typeIn('C')">C</button>
+                    <button class="key" onclick="typeIn('D')">D</button>
+                    <button class="key" onclick="typeIn('E')">E</button>
+                    <button class="key" onclick="typeIn('F')">F</button>
+                    
+                    <button class="key btn-red" style="grid-column: span 2;" onclick="erase()">Fafana</button>
+                    <button class="key" style="grid-column: span 2; background:#555" onclick="resetAll()">Foana</button>
+                </div>
+
+                <button class="btn-red full-width" onclick="showPrediction()">🎯 VINAVINA</button>
             </div>
         </div>
 
-        <div id="p-stats" class="page">
-            <h3 style="color:var(--red)">STATISTIQUES</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div class="stat-item">✈️<br><small>TOTAL</small><b>1,240</b></div>
-                <div class="stat-item">📅<br><small>ANDROANY</small><b>42</b></div>
-                <div class="stat-item">🎯<br><small>CIBLE</small><b>2.50x</b></div>
-                <div class="stat-item">📜<br><small>HISTORIQUE</small><b>OK</b></div>
+        <div id="p-result" class="page">
+            <h2 id="timer-display" style="color:var(--red); font-size: 3rem; margin: 20px 0;">00:00:00</h2>
+            <div class="card" style="border: 2px solid white;">
+                <h1 id="vokatra-isa" style="font-size: 4rem; margin: 10px 0;">1.00x</h1>
+                <p>TOUR TSARA</p>
             </div>
-            <div class="card" style="margin-top: 15px; text-align: left;">
-                <small>DISTRIBUTION DES TOURS</small>
-                <div style="margin: 10px 0;">🔴 Tour Ratsy <span style="float:right">30%</span></div>
-                <div style="margin: 10px 0;">⚪ Tour Tsara <span style="float:right">25%</span></div>
-                <div style="margin: 10px 0;">🟢 Tour Vert <span style="float:right">20%</span></div>
-            </div>
-        </div>
-
-        <div id="p-history" class="page">
-            <h3 style="color:var(--red)">HISTORIQUE</h3>
-            <div id="history-list">
-                <div class="hist-row">
-                    <div><b>08:42:57</b><br><small>❤️ 4.96x | 🖤 7.78x</small></div>
-                    <span class="tag" style="color:#2ecc71">TOUR VERT</span>
-                </div>
-                <div class="hist-row">
-                    <div><b>08:43:56</b><br><small>❤️ 1.68x | 🖤 2.42x</small></div>
-                    <span class="tag">TOUR TSARA</span>
-                </div>
-            </div>
+            <button class="btn-red full-width" onclick="go('p-home')">Hiverina</button>
         </div>
 
     </div>
 
     <nav>
-        <div class="nav-item nav-active" onclick="go('p-home', this)">🏠</div>
-        <div class="nav-item" onclick="go('p-stats', this)">📊</div>
-        <div class="nav-item" onclick="go('p-history', this)">📜</div>
-        <div class="nav-item" onclick="go('p-account', this)">👤</div>
+        <div class="nav-item nav-active" onclick="go('p-home')">🏠</div>
+        <div class="nav-item">📊</div>
+        <div class="nav-item">📜</div>
+        <div class="nav-item">👤</div>
     </nav>
 
     <script>
-        // Navigation logic
-        function go(id, el) {
+        let currentFocus = 'time';
+        let timeData = "";
+        let hexData = "";
+
+        function go(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('nav-active'));
             document.getElementById(id).classList.add('active');
-            el.classList.add('nav-active');
         }
 
-        // Keypad Generation
-        const keys = ['1','2','3','4','5','6','7','8','9','0','A','B','C','D','E','F'];
-        const keypad = document.getElementById('main-keypad');
-        keys.forEach(k => {
-            let b = document.createElement('button');
-            b.className = 'key';
-            b.innerText = k;
-            b.onclick = () => typeIn(k);
-            keypad.appendChild(b);
-        });
-
-        // Input Logic
-        let focus = 'time';
-        let tData = ""; let hData = "";
-        function setFocus(f) { 
-            focus = f; 
-            document.getElementById('box-time').classList.toggle('active-input', f=='time');
-            document.getElementById('box-hex').classList.toggle('active-input', f=='hex');
+        function setFocus(f) {
+            currentFocus = f;
+            document.getElementById('box-time').classList.toggle('active-input', f === 'time');
+            document.getElementById('box-hex').classList.toggle('active-input', f === 'hex');
         }
-        function typeIn(v) {
-            if(focus == 'time' && tData.length < 6) tData += v;
-            if(focus == 'hex' && hData.length < 6) hData += v;
+
+        function typeIn(val) {
+            if (currentFocus === 'time' && timeData.length < 6) {
+                if(!isNaN(val)) timeData += val; // Isa ihany ny lera
+            } else if (currentFocus === 'hex' && hexData.length < 6) {
+                hexData += val;
+            }
             render();
         }
-        function render() {
-            document.getElementById('box-time').innerText = (tData.substring(0,2)||'00')+':'+(tData.substring(2,4)||'00')+':'+(tData.substring(4,6)||'00');
-            document.getElementById('box-hex').innerText = hData || "6 litera hex";
+
+        function erase() {
+            if (currentFocus === 'time') timeData = timeData.slice(0, -1);
+            else hexData = hexData.slice(0, -1);
+            render();
         }
+
+        function resetAll() {
+            timeData = ""; hexData = ""; render();
+        }
+
+        function render() {
+            let h = (timeData.substring(0,2) || "00").padEnd(2, '0');
+            let m = (timeData.substring(2,4) || "00").padEnd(2, '0');
+            let s = (timeData.substring(4,6) || "00").padEnd(2, '0');
+            document.getElementById('box-time').innerText = `${h} : ${m} : ${s}`;
+            document.getElementById('box-hex').innerText = hexData || "6 litera hex";
+        }
+
+        function showPrediction() {
+            if(timeData.length < 6) { alert("Fenoy ny lera (6 isa)"); return; }
+            go('p-result');
+            let res = (Math.random() * 5 + 1.1).toFixed(2);
+            document.getElementById('vokatra-isa').innerText = res + "x";
+        }
+
+        // Clock animation
+        setInterval(() => {
+            let d = new Date();
+            document.getElementById('timer-display').innerText = d.toLocaleTimeString('fr-FR');
+        }, 1000);
     </script>
 </body>
 </html>

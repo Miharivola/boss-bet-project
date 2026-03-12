@@ -3,119 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boss Bet - Predictor</title>
+    <title>Boss Bet - Pro</title>
     <style>
         :root { --red: #ff3131; --dark: #121212; --card: #1e1e1e; --grey: #2a2a2a; }
-        body { background-color: var(--dark); color: white; font-family: sans-serif; margin: 0; padding: 10px; text-align: center; }
-        .page { display: none; max-width: 400px; margin: auto; }
+        body { background-color: var(--dark); color: white; font-family: sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
+        
+        .container { max-width: 450px; margin: auto; padding-bottom: 80px; }
+        .page { display: none; padding: 20px; text-align: center; animation: fadeIn 0.3s; }
         .active { display: block; }
-        .card { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #333; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Style Card & Inputs */
+        .card { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #333; margin-bottom: 15px; }
+        .input-box { background: var(--grey); padding: 15px; border-radius: 10px; margin: 10px 0; font-family: monospace; font-size: 1.4rem; border: 2px solid transparent; cursor: pointer; }
+        .active-input { border: 2px solid var(--red); }
         
-        /* Input boxes azo kitihina */
-        .input-box { 
-            background: var(--grey); 
-            padding: 15px; 
-            border-radius: 10px; 
-            margin: 10px 0; 
-            font-family: monospace; 
-            font-size: 1.4rem; 
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: 0.3s;
-        }
-        .active-input { border: 2px solid var(--red); background: #331a1a; }
-        
-        .label { color: #888; font-size: 0.8rem; margin-top: 10px; }
-        .keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 20px; }
-        .key { background: #333; padding: 18px 5px; border-radius: 8px; cursor: pointer; border: none; color: white; font-weight: bold; font-size: 1.1rem; }
-        .key:active { background: #555; }
-        .key-red { background: var(--red); grid-column: span 2; }
-        
-        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #1a1a1a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
+        /* Keypad */
+        .keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 15px; }
+        .key { background: #333; padding: 15px 5px; border-radius: 8px; border: none; color: white; font-weight: bold; }
+        .btn-main { background: var(--red); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; margin-top: 10px; }
+
+        /* Stats & History Style */
+        .stat-item { background: var(--grey); padding: 15px; border-radius: 15px; display: flex; flex-direction: column; align-items: center; }
+        .hist-row { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--red); }
+        .tag { font-size: 0.7rem; padding: 3px 8px; border-radius: 5px; background: #444; }
+
+        /* Nav Bottom */
+        nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: #1a1a1a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
+        .nav-item { font-size: 1.5rem; filter: grayscale(1); cursor: pointer; transition: 0.3s; }
+        .nav-active { filter: grayscale(0); transform: scale(1.2); }
     </style>
 </head>
 <body>
 
-    <div id="page1" class="page active">
-        <h2 style="color:var(--red)">BOSS BET</h2>
+    <div class="container">
         
-        <div class="card">
-            <div class="label">ORA FIAINGANA</div>
-            <div id="box-time" class="input-box active-input" onclick="setFocus('time')">00 : 00 : 00</div>
-            
-            <div class="label">VOAN'NY SERVER</div>
-            <div id="box-hex" class="input-box" onclick="setFocus('hex')">6 litera hex</div>
-
-            <div class="keypad">
-                <button class="key" onclick="typeIn('1')">1</button>
-                <button class="key" onclick="typeIn('2')">2</button>
-                <button class="key" onclick="typeIn('3')">3</button>
-                <button class="key" onclick="typeIn('4')">4</button>
-                <button class="key" onclick="typeIn('5')">5</button>
-                <button class="key" onclick="typeIn('6')">6</button>
-                <button class="key" onclick="typeIn('7')">7</button>
-                <button class="key" onclick="typeIn('8')">8</button>
-                <button class="key" onclick="typeIn('9')">9</button>
-                <button class="key" onclick="typeIn('0')">0</button>
-                <button class="key" onclick="typeIn('A')">A</button>
-                <button class="key" onclick="typeIn('B')">B</button>
-                <button class="key" onclick="typeIn('C')">C</button>
-                <button class="key" onclick="typeIn('D')">D</button>
-                <button class="key" onclick="typeIn('E')">E</button>
-                <button class="key" onclick="typeIn('F')">F</button>
-                <button class="key key-red" onclick="erase()">Fafana</button>
-                <button class="key key-red" onclick="alert('Vinavina: ' + (Math.random()*3+1).toFixed(2)+'x')">VINAVINA</button>
+        <div id="p-account" class="page">
+            <h3 style="color:var(--red)">MON COMPTE</h3>
+            <div class="card">
+                <div style="width: 80px; height: 80px; background: #444; border-radius: 50%; margin: 0 auto 10px; border: 3px solid var(--red); display: flex; align-items: center; justify-content: center; font-size: 2rem;">B</div>
+                <h4>Boss Bet <small>👑 ADMIN</small></h4>
+                <div style="text-align: left; background: #222; padding: 10px; border-radius: 10px;">
+                    <small>⌛ Abonnement</small>
+                    <span style="float: right; color: var(--red);">29959 jours</span>
+                </div>
+                <div style="margin-top: 15px;">
+                    <button class="btn-main" style="background:#444">Fiteny: Malagasy</button>
+                    <button class="btn-main" style="margin-top:10px">DÉCONNEXION</button>
+                </div>
             </div>
         </div>
+
+        <div id="p-home" class="page active">
+            <h3 style="color:var(--red)">BOSS BET</h3>
+            <div class="card">
+                <small>ORA FIAINGANA</small>
+                <div id="box-time" class="input-box active-input" onclick="setFocus('time')">00 : 00 : 00</div>
+                <small>VOAN'NY SERVER</small>
+                <div id="box-hex" class="input-box" onclick="setFocus('hex')">6 litera hex</div>
+                <div class="keypad" id="main-keypad">
+                    </div>
+                <button class="btn-main" onclick="alert('Mikaroka vokatry...')">VINAVINA</button>
+            </div>
+        </div>
+
+        <div id="p-stats" class="page">
+            <h3 style="color:var(--red)">STATISTIQUES</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="stat-item">✈️<br><small>TOTAL</small><b>1,240</b></div>
+                <div class="stat-item">📅<br><small>ANDROANY</small><b>42</b></div>
+                <div class="stat-item">🎯<br><small>CIBLE</small><b>2.50x</b></div>
+                <div class="stat-item">📜<br><small>HISTORIQUE</small><b>OK</b></div>
+            </div>
+            <div class="card" style="margin-top: 15px; text-align: left;">
+                <small>DISTRIBUTION DES TOURS</small>
+                <div style="margin: 10px 0;">🔴 Tour Ratsy <span style="float:right">30%</span></div>
+                <div style="margin: 10px 0;">⚪ Tour Tsara <span style="float:right">25%</span></div>
+                <div style="margin: 10px 0;">🟢 Tour Vert <span style="float:right">20%</span></div>
+            </div>
+        </div>
+
+        <div id="p-history" class="page">
+            <h3 style="color:var(--red)">HISTORIQUE</h3>
+            <div id="history-list">
+                <div class="hist-row">
+                    <div><b>08:42:57</b><br><small>❤️ 4.96x | 🖤 7.78x</small></div>
+                    <span class="tag" style="color:#2ecc71">TOUR VERT</span>
+                </div>
+                <div class="hist-row">
+                    <div><b>08:43:56</b><br><small>❤️ 1.68x | 🖤 2.42x</small></div>
+                    <span class="tag">TOUR TSARA</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <nav>
-        <div class="nav-item">🏠</div>
-        <div class="nav-item">📊</div>
-        <div class="nav-item">🎯</div>
+        <div class="nav-item nav-active" onclick="go('p-home', this)">🏠</div>
+        <div class="nav-item" onclick="go('p-stats', this)">📊</div>
+        <div class="nav-item" onclick="go('p-history', this)">📜</div>
+        <div class="nav-item" onclick="go('p-account', this)">👤</div>
     </nav>
 
     <script>
-        let currentFocus = 'time';
-        let timeData = "";
-        let hexData = "";
-
-        // Mifidy izay boaty hofenoina
-        function setFocus(target) {
-            currentFocus = target;
-            document.getElementById('box-time').classList.remove('active-input');
-            document.getElementById('box-hex').classList.remove('active-input');
-            document.getElementById('box-' + target).classList.add('active-input');
+        // Navigation logic
+        function go(id, el) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('nav-active'));
+            document.getElementById(id).classList.add('active');
+            el.classList.add('nav-active');
         }
 
-        function typeIn(val) {
-            if (currentFocus === 'time') {
-                if (timeData.length < 6 && !isNaN(val)) {
-                    timeData += val;
-                }
-            } else {
-                if (hexData.length < 6) {
-                    hexData += val;
-                }
-            }
+        // Keypad Generation
+        const keys = ['1','2','3','4','5','6','7','8','9','0','A','B','C','D','E','F'];
+        const keypad = document.getElementById('main-keypad');
+        keys.forEach(k => {
+            let b = document.createElement('button');
+            b.className = 'key';
+            b.innerText = k;
+            b.onclick = () => typeIn(k);
+            keypad.appendChild(b);
+        });
+
+        // Input Logic
+        let focus = 'time';
+        let tData = ""; let hData = "";
+        function setFocus(f) { 
+            focus = f; 
+            document.getElementById('box-time').classList.toggle('active-input', f=='time');
+            document.getElementById('box-hex').classList.toggle('active-input', f=='hex');
+        }
+        function typeIn(v) {
+            if(focus == 'time' && tData.length < 6) tData += v;
+            if(focus == 'hex' && hData.length < 6) hData += v;
             render();
         }
-
-        function erase() {
-            if (currentFocus === 'time') timeData = timeData.slice(0, -1);
-            else hexData = hexData.slice(0, -1);
-            render();
-        }
-
         function render() {
-            // Render Time
-            let h = (timeData.substring(0,2) || "00").padEnd(2, '0');
-            let m = (timeData.substring(2,4) || "00").padEnd(2, '0');
-            let s = (timeData.substring(4,6) || "00").padEnd(2, '0');
-            document.getElementById('box-time').innerText = `${h} : ${m} : ${s}`;
-            
-            // Render Hex
-            document.getElementById('box-hex').innerText = hexData || "6 litera hex";
+            document.getElementById('box-time').innerText = (tData.substring(0,2)||'00')+':'+(tData.substring(2,4)||'00')+':'+(tData.substring(4,6)||'00');
+            document.getElementById('box-hex').innerText = hData || "6 litera hex";
         }
     </script>
 </body>

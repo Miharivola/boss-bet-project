@@ -3,101 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boss Bet Pro - Final</title>
+    <title>Boss Bet Pro</title>
     <style>
         :root { --red: #ff3131; --dark: #121212; --card: #1e1e1e; --grey: #2a2a2a; }
-        body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; padding: 0; text-align: center; }
-        .container { max-width: 450px; margin: auto; padding-bottom: 90px; }
+        body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; padding: 0; text-align: center; overflow-x: hidden; }
+        
+        .container { max-width: 450px; margin: auto; padding-bottom: 90px; min-height: 100vh; }
         .page { display: none; padding: 20px; animation: fadeIn 0.3s; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Predictor Styles */
-        .card { background: var(--card); border-radius: 20px; padding: 15px; border: 1px solid #333; margin-top: 10px; position: relative; overflow: hidden; }
-        .input-box { background: var(--grey); padding: 15px; border-radius: 10px; margin: 10px 0; font-family: monospace; font-size: 1.4rem; border: 2px solid transparent; cursor: pointer; }
-        .selected { border: 2px solid var(--red); background: #331a1a; }
+        /* Form Predictor */
+        .card { background: var(--card); border-radius: 20px; padding: 15px; border: 1px solid #333; margin-top: 10px; }
+        .input-box { background: var(--grey); padding: 15px; border-radius: 10px; margin: 10px 0; font-family: monospace; font-size: 1.4rem; border: 2px solid transparent; cursor: pointer; color: #aaa; }
+        .selected { border: 2px solid var(--red); background: #331a1a; color: white; }
         
         /* Keypad */
         .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 15px; }
         .key { background: #333; padding: 18px 5px; border-radius: 8px; border: none; color: white; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
-        .btn-red { background: var(--red); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; }
+        .key:active { background: #555; }
+        .btn-red { background: var(--red); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; font-size: 1rem; }
 
-        /* Prediction Result Box */
-        #result-area { display: none; margin-top: 20px; padding: 20px; border-radius: 15px; background: rgba(255, 49, 49, 0.1); border: 1px dashed var(--red); animation: slideUp 0.5s; }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .multiplier { font-size: 3rem; font-weight: bold; color: white; margin: 10px 0; }
-        .signal-live { background: var(--red); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; display: inline-block; margin-bottom: 10px; }
+        /* Prediction Result Display */
+        #prediction-result { display: none; margin-top: 20px; padding: 20px; border-radius: 15px; background: linear-gradient(145deg, #1e1e1e, #252525); border: 1px solid #444; animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .plane-icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+        .res-x { font-size: 3.5rem; font-weight: bold; color: white; margin: 5px 0; text-shadow: 0 0 15px rgba(255, 49, 49, 0.5); }
+        .res-label { color: var(--red); font-weight: bold; letter-spacing: 2px; font-size: 0.9rem; }
 
-        /* Stats & Nav */
-        .stat-card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 10px; border-left: 5px solid var(--red); text-align: left; }
-        .bar { background: #333; height: 8px; border-radius: 4px; margin: 5px 0; width: 100%; }
-        .fill { background: var(--red); height: 100%; border-radius: 4px; }
+        /* Nav Bottom */
         nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: #1a1a1a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 100; }
-        .nav-item { font-size: 1.6rem; cursor: pointer; opacity: 0.3; }
-        .nav-active { opacity: 1; color: var(--red); }
+        .nav-item { font-size: 1.6rem; cursor: pointer; opacity: 0.3; transition: 0.3s; }
+        .nav-active { opacity: 1; color: var(--red); transform: scale(1.1); }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div id="p-home" class="page active">
-            <h2 style="color:var(--red);">BOSS BET</h2>
+            <h2 style="color:var(--red); margin-bottom: 5px;">BOSS BET</h2>
+            <p style="font-size: 0.8rem; color: #888; margin-top: 0;">AVIATOR PREDICTOR</p>
+            
             <div class="card">
-                <small style="color:#888">ORA FIAINGANA</small>
-                <div id="box-time" class="input-box selected" onclick="mifidy('time')">00 : 00 : 00</div>
-                <small style="color:#888">VOAN'NY SERVER</small>
-                <div id="box-hex" class="input-box" onclick="mifidy('hex')">HEX CODE</div>
+                <small style="color:#888; font-weight: bold;">ORA FIAINGANA</small>
+                <div id="box-time" class="input-box selected" onclick="mifidy('time')">HH : MM : SS</div>
                 
-                <div class="keypad">
-                    <button class="key" onclick="press('1')">1</button><button class="key" onclick="press('2')">2</button><button class="key" onclick="press('3')">3</button><button class="key" onclick="press('4')">4</button>
-                    <button class="key" onclick="press('5')">5</button><button class="key" onclick="press('6')">6</button><button class="key" onclick="press('7')">7</button><button class="key" onclick="press('8')">8</button>
-                    <button class="key" onclick="press('9')">9</button><button class="key" onclick="press('0')">0</button><button class="key" onclick="press('A')">A</button><button class="key" onclick="press('B')">B</button>
-                    <button class="key" onclick="press('C')">C</button><button class="key" onclick="press('D')">D</button><button class="key" onclick="press('E')">E</button><button class="key" onclick="press('F')">F</button>
-                </div>
+                <small style="color:#888; font-weight: bold;">VOAN'NY SERVER (HEX)</small>
+                <div id="box-hex" class="input-box" onclick="mifidy('hex')">6 litera hex</div>
 
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button class="btn-red" style="background:#444" onclick="mamafa()">FAFAFA</button>
-                    <button class="btn-red" onclick="vinavina()">VINAVINA</button>
+                <div id="prediction-result">
+                    <span class="res-label">SIGNAL LIVE</span>
+                    <span class="plane-icon">✈️</span>
+                    <div class="res-x" id="valiny-x">0.00x</div>
+                    <small style="color: #666;">Andraso ny fiaingana manaraka</small>
                 </div>
-
-                <div id="result-area">
-                    <div class="signal-live">🎯 SIGNAL LIVE</div>
-                    <div style="font-size: 2rem;">✈️</div>
-                    <div class="multiplier" id="valiny-x">2.17x</div>
-                    <div style="color: #888; font-size: 0.8rem;">Andraso ny fiaingana...</div>
+                
+                <div id="keypad-section">
+                    <div class="keypad">
+                        <button class="key" onclick="press('1')">1</button><button class="key" onclick="press('2')">2</button><button class="key" onclick="press('3')">3</button><button class="key" onclick="press('4')">4</button>
+                        <button class="key" onclick="press('5')">5</button><button class="key" onclick="press('6')">6</button><button class="key" onclick="press('7')">7</button><button class="key" onclick="press('8')">8</button>
+                        <button class="key" onclick="press('9')">9</button><button class="key" onclick="press('0')">0</button><button class="key" onclick="press('A')">A</button><button class="key" onclick="press('B')">B</button>
+                        <button class="key" onclick="press('C')">C</button><button class="key" onclick="press('D')">D</button><button class="key" onclick="press('E')">E</button><button class="key" onclick="press('F')">F</button>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn-red" style="background:#444" onclick="mamafa()">FAFAFA</button>
+                        <button class="btn-red" onclick="hikajy()">VINAVINA</button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div id="p-stats" class="page">
             <h2 style="color:var(--red);">📊 STATISTIQUES</h2>
-            <div class="stat-card">🔴 TOUR RATSY (30%) <div class="bar"><div class="fill" style="width:30%"></div></div></div>
-            <div class="stat-card">⚪ TOUR TSARA (25%) <div class="bar"><div class="fill" style="width:25%; background:white;"></div></div></div>
-            <div class="stat-card">🟢 TOUR VERT (20%) <div class="bar"><div class="fill" style="width:20%; background:#2ecc71;"></div></div></div>
-        </div>
-
-        <div id="p-history" class="page">
-            <h2 style="color:var(--red);">📜 HISTORIQUE</h2>
-            <div class="stat-card"><b>19:30:00</b><br><small>❤️ 2.17x | Hex: 1678BF</small></div>
-            <div class="stat-card"><b>18:50:00</b><br><small>❤️ 1.45x | Hex: A2B3C4</small></div>
-        </div>
-
-        <div id="p-account" class="page">
-            <h2 style="color:var(--red);">👤 MON COMPTE</h2>
-            <div class="card">
-                <div style="width:70px; height:70px; background:#444; border-radius:50%; margin:auto; border:2px solid var(--red); display:flex; align-items:center; justify-content:center; font-size:2rem;">B</div>
-                <h3>Admin Boss Bet</h3>
-                <p>Abonnement: <span style="color:var(--red)">Aktiva</span></p>
-                <button class="btn-red" style="background:#444">DECONNEXION</button>
-            </div>
+            <p>Mbola eo am-panamboarana...</p>
         </div>
     </div>
 
     <nav>
         <div id="nav-home" class="nav-item nav-active" onclick="go('p-home', 'nav-home')">🏠</div>
         <div id="nav-stats" class="nav-item" onclick="go('p-stats', 'nav-stats')">📊</div>
-        <div id="nav-hist" class="nav-item" onclick="go('p-history', 'nav-hist')">📜</div>
-        <div id="nav-acc" class="nav-item" onclick="go('p-account', 'nav-acc')">👤</div>
+        <div id="nav-hist" class="nav-item">📜</div>
+        <div id="nav-acc" class="nav-item">👤</div>
     </nav>
 
     <script>
@@ -126,33 +112,39 @@
         function mamafa() {
             if(focus === 'time') tData = tData.slice(0, -1);
             else hData = hData.slice(0, -1);
-            document.getElementById('result-area').style.display = 'none';
+            // Rehefa mamafa dia manafina ny valiny teo aloha
+            document.getElementById('prediction-result').style.display = 'none';
+            document.getElementById('keypad-section').style.display = 'block';
             render();
         }
 
         function render() {
-            let h = (tData.substring(0,2) || "00").padEnd(2, '0');
-            let m = (tData.substring(2,4) || "00").padEnd(2, '0');
-            let s = (tData.substring(4,6) || "00").padEnd(2, '0');
+            let h = (tData.substring(0,2) || "HH");
+            let m = (tData.substring(2,4) || "MM");
+            let s = (tData.substring(4,6) || "SS");
             document.getElementById('box-time').innerText = h + " : " + m + " : " + s;
-            document.getElementById('box-hex').innerText = hData || "HEX CODE";
+            document.getElementById('box-hex').innerText = hData || "6 litera hex";
         }
 
-        function vinavina() {
-            if(tData.length < 4) { alert("Ampidiro ny lera!"); return; }
+        function hikajy() {
+            if(tData.length < 4) {
+                alert("Ampidiro ny lera feno azafady!");
+                return;
+            }
+
+            // Hanafina keypad ary hampiseho ny valiny
+            document.getElementById('keypad-section').style.display = 'none';
+            const resArea = document.getElementById('prediction-result');
+            const resX = document.getElementById('valiny-x');
             
-            // Rehefa kitihiha dia mampiseho an'ilay valiny
-            let ra = document.getElementById('result-area');
-            let val = document.getElementById('valiny-x');
-            
-            ra.style.display = 'block';
-            val.innerText = "Mikaroka...";
-            
+            resArea.style.display = 'block';
+            resX.innerText = "---";
+
+            // Fakana isa kisendrasendra (ohatra 1.00 hatramin'ny 10.00)
             setTimeout(() => {
-                // Eto no azo ovana ny algorithm raha tiana ho kisendrasendra
-                let randomX = (Math.random() * (4.5 - 1.2) + 1.2).toFixed(2);
-                val.innerText = randomX + "x";
-            }, 1000);
+                let randomVal = (Math.random() * (5.5 - 1.1) + 1.1).toFixed(2);
+                resX.innerText = randomVal + "x";
+            }, 1500);
         }
     </script>
 </body>

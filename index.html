@@ -3,52 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boss Bet Pro - Time Predictor</title>
+    <title>Boss Bet Pro - Predictor</title>
     <style>
-        :root { --red: #ff3131; --dark: #121212; --card: rgba(30, 30, 30, 0.9); }
-        body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; padding: 0; text-align: center; }
+        :root { --red: #ff3131; --dark: #0a0a0a; --card: #161616; }
+        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; text-align: center; overflow-x: hidden; }
         
-        .container { max-width: 450px; margin: auto; padding-bottom: 80px; }
-        .page { display: none; padding: 20px; animation: fadeIn 0.3s; }
+        .container { max-width: 450px; margin: auto; padding: 15px; min-height: 90vh; }
+        .page { display: none; animation: fadeIn 0.3s ease-in; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Predictor Style */
-        .card { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #333; margin-top: 10px; }
-        .input-box { background: #2a2a2a; padding: 15px; border-radius: 12px; margin: 10px 0; font-family: monospace; font-size: 1.4rem; border: 2px solid transparent; cursor: pointer; color: #aaa; }
-        .selected { border-color: var(--red); background: #331a1a; color: white; }
+        /* Style ho an'ny Input Page */
+        .card { background: var(--card); border-radius: 25px; padding: 25px; border: 1px solid #222; margin-top: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .label { color: #888; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; margin-bottom: 5px; display: block; }
+        .input-box { background: #111; padding: 18px; border-radius: 15px; margin-bottom: 20px; font-family: monospace; font-size: 1.5rem; border: 2px solid #333; cursor: pointer; transition: 0.3s; }
+        .selected { border-color: var(--red); background: #1a0a0a; box-shadow: 0 0 15px rgba(255, 49, 49, 0.2); }
 
         /* Keypad */
-        .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 15px; }
-        .key { background: #333; padding: 18px 5px; border-radius: 10px; border: none; color: white; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
-        .btn-red { background: var(--red); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; font-size: 1.1rem; }
+        .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
+        .key { background: #222; padding: 18px 5px; border-radius: 12px; border: none; color: white; font-weight: bold; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
+        .key:active { background: #444; transform: scale(0.95); }
+        .btn-action { border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; font-size: 1rem; margin-top: 15px; transition: 0.3s; }
+        .btn-fafana { background: #333; color: white; }
+        .btn-vinavina { background: var(--red); color: white; box-shadow: 0 4px 15px rgba(255, 49, 49, 0.4); }
 
-        /* PEJY SIGNAL LIVE */
+        /* STYLE SIGNAL LIVE (Mitovy amin'ny sary) */
         .signal-screen { 
-            background: radial-gradient(circle, #2a1515, #121212); 
-            border-radius: 25px; padding: 40px 10px; 
-            border: 1px solid #444; position: relative; overflow: hidden;
-            min-height: 380px; display: flex; flex-direction: column; justify-content: center;
+            background: radial-gradient(circle at center, #251010 0%, #0a0a0a 100%); 
+            border-radius: 30px; padding: 50px 15px; border: 1px solid #333; 
+            position: relative; overflow: hidden; min-height: 420px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        .lion-bg { font-size: 10rem; opacity: 0.1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; }
-        .live-tag { background: var(--red); padding: 5px 15px; border-radius: 5px; font-size: 0.9rem; font-weight: bold; display: inline-block; margin-bottom: 10px; z-index: 1; align-self: center; }
+        .lion-bg { font-size: 12rem; opacity: 0.08; position: absolute; z-index: 0; pointer-events: none; }
+        .live-tag { background: var(--red); padding: 6px 16px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-bottom: 20px; z-index: 1; display: flex; align-items: center; gap: 5px; }
         
-        .predicted-time { font-size: 4rem; font-weight: bold; color: var(--red); z-index: 1; margin: 10px 0; font-family: monospace; text-shadow: 0 0 20px rgba(255, 49, 49, 0.4); }
+        .predicted-time { font-size: 4.5rem; font-weight: bold; color: var(--red); z-index: 1; font-family: monospace; text-shadow: 0 0 25px rgba(255, 49, 49, 0.5); margin: 15px 0; }
         
-        /* Tour Status */
-        .tour-status { border: 1px solid white; padding: 8px 25px; border-radius: 25px; display: inline-block; align-self: center; font-weight: bold; font-size: 0.9rem; z-index: 1; margin-bottom: 25px; }
-        .status-vert { color: #2ecc71; border-color: #2ecc71; }
-        .status-rouge { color: var(--red); border-color: var(--red); }
+        /* Tour Badges */
+        .tour-badge { padding: 8px 25px; border-radius: 25px; font-weight: bold; font-size: 0.9rem; z-index: 1; border: 1.5px solid; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
+        .tsara { color: white; border-color: white; }
+        .vert { color: #2ecc71; border-color: #2ecc71; }
+        .ratsy { color: #ff3131; border-color: #ff3131; }
+        .bleu { color: #3498db; border-color: #3498db; }
 
-        /* Côtes any ambany */
-        .cotes-area { display: flex; justify-content: space-around; width: 100%; z-index: 1; margin-top: 10px; font-weight: bold; }
-        .cote-box { font-size: 1rem; }
+        .cotes-row { display: flex; justify-content: center; gap: 25px; width: 100%; z-index: 1; font-weight: bold; font-size: 1rem; }
         .pink { color: #e056fd; }
-        .grey-text { color: #888; }
 
-        /* Nav Bottom */
-        nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: #1a1a1a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 100; }
-        .nav-item { font-size: 1.6rem; cursor: pointer; opacity: 0.3; }
+        .btn-hiverina { background: #1a1a1a; color: white; border: 1px solid #333; padding: 15px; border-radius: 12px; width: 100%; margin-top: 25px; font-weight: bold; cursor: pointer; }
+
+        /* Navigation */
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: #0f0f0f; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
+        .nav-item { font-size: 1.5rem; cursor: pointer; opacity: 0.4; transition: 0.3s; }
         .nav-active { opacity: 1; color: var(--red); }
     </style>
 </head>
@@ -57,12 +62,15 @@
     <div class="container">
         
         <div id="p-home" class="page active">
-            <h2 style="color:var(--red); letter-spacing: 1px;">BOSS BET</h2>
+            <h1 style="color:var(--red); letter-spacing: 2px; margin-bottom: 5px;">BOSS BET</h1>
+            <p style="color: #666; font-size: 0.7rem; margin-top: 0; margin-bottom: 20px;">AVIATOR PREDICTOR</p>
+            
             <div class="card">
-                <small style="color:#888; font-weight: bold;">ORA FIAINGANA</small>
-                <div id="box-time" class="input-box selected" onclick="mifidy('time')">00 : 00 : 00</div>
-                <small style="color:#888; font-weight: bold;">VOAN'NY SERVER (HEX)</small>
-                <div id="box-hex" class="input-box" onclick="mifidy('hex')">HEX CODE</div>
+                <span class="label">ORA FIAINGANA</span>
+                <div id="box-time" class="input-box selected" onclick="mifidy('time')">HH : MM : SS</div>
+                
+                <span class="label">VOAN'NY SERVER (HEX)</span>
+                <div id="box-hex" class="input-box" onclick="mifidy('hex')">6 litera hex</div>
                 
                 <div class="keypad">
                     <button class="key" onclick="press('1')">1</button><button class="key" onclick="press('2')">2</button><button class="key" onclick="press('3')">3</button><button class="key" onclick="press('4')">4</button>
@@ -70,55 +78,51 @@
                     <button class="key" onclick="press('9')">9</button><button class="key" onclick="press('0')">0</button><button class="key" onclick="press('A')">A</button><button class="key" onclick="press('B')">B</button>
                     <button class="key" onclick="press('C')">C</button><button class="key" onclick="press('D')">D</button><button class="key" onclick="press('E')">E</button><button class="key" onclick="press('F')">F</button>
                 </div>
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="btn-red" style="background:#444" onclick="mamafa()">FAFAFA</button>
-                    <button class="btn-red" onclick="hikajy()">VINAVINA</button>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-action btn-fafana" onclick="mamafa()">FAFANA</button>
+                    <button class="btn-action btn-vinavina" onclick="hikajy()">VINAVINA</button>
                 </div>
             </div>
         </div>
 
         <div id="p-result" class="page">
-            <h2 style="color:var(--red);">BOSS BET</h2>
+            <h1 style="color:var(--red); margin-bottom: 25px;">BOSS BET</h1>
             <div class="signal-screen">
                 <div class="lion-bg">🦁</div>
                 <div class="live-tag">🎯 SIGNAL LIVE</div>
                 <div style="font-size: 2.5rem; z-index: 1;">✈️</div>
+                
                 <div class="predicted-time" id="valiny-lera">00:00:00</div>
                 
-                <div class="tour-status" id="tour-txt">🤍 TOUR TSARA</div>
+                <div id="badge-container" class="tour-badge tsara">
+                    <span id="emoji-tour">🤍</span> <span id="text-tour">TOUR TSARA</span>
+                </div>
 
-                <div class="cotes-area">
-                    <div class="cote-box" style="color: var(--red);" id="val-rouge">❤️ 1.53x</div>
-                    <div class="cote-box grey-text" id="val-grey">🖤 2.40x</div>
-                    <div class="cote-box pink" id="val-pink">💜 100x</div>
+                <div class="cotes-row">
+                    <div style="color: var(--red);" id="c1">❤️ 1.53x</div>
+                    <div style="color: #888;" id="c2">🖤 2.40x</div>
+                    <div class="pink" id="c3">💜 100x</div>
                 </div>
             </div>
-            <button class="btn-red" style="margin-top: 25px; background: #333;" onclick="go('p-home')">HIVERINA</button>
+            <button class="btn-hiverina" onclick="go('p-home')">HIVERINA</button>
         </div>
-
-        <div id="p-stats" class="page"><h2>📊 STATS</h2></div>
-        <div id="p-history" class="page"><h2>📜 HISTORY</h2></div>
-        <div id="p-account" class="page"><h2>👤 ACCOUNT</h2></div>
 
     </div>
 
     <nav>
-        <div id="nav-home" class="nav-item nav-active" onclick="go('p-home', 'nav-home')">🏠</div>
-        <div id="nav-stats" class="nav-item" onclick="go('p-stats', 'nav-stats')">📊</div>
-        <div id="nav-hist" class="nav-item" onclick="go('p-history', 'nav-hist')">📜</div>
-        <div id="nav-acc" class="nav-item" onclick="go('p-account', 'nav-acc')">👤</div>
+        <div class="nav-item nav-active">🏠</div>
+        <div class="nav-item">📊</div>
+        <div class="nav-item">📜</div>
+        <div class="nav-item">👤</div>
     </nav>
 
     <script>
         let focus = 'time';
         let tData = ""; let hData = "";
 
-        function go(pId, nId) {
+        function go(pId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            if(nId) {
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('nav-active'));
-                document.getElementById(nId).classList.add('nav-active');
-            }
             document.getElementById(pId).classList.add('active');
         }
 
@@ -141,46 +145,45 @@
         }
 
         function render() {
-            let h = (tData.substring(0,2) || "00").padEnd(2, '0');
-            let m = (tData.substring(2,4) || "00").padEnd(2, '0');
-            let s = (tData.substring(4,6) || "00").padEnd(2, '0');
+            let h = (tData.substring(0,2) || "HH").padEnd(2, ' ');
+            let m = (tData.substring(2,4) || "MM").padEnd(2, ' ');
+            let s = (tData.substring(4,6) || "SS").padEnd(2, ' ');
             document.getElementById('box-time').innerText = h + " : " + m + " : " + s;
-            document.getElementById('box-hex').innerText = hData || "HEX CODE";
+            document.getElementById('box-hex').innerText = hData || "6 litera hex";
         }
 
         function hikajy() {
             if(tData.length < 4) { alert("Fenoy ny lera!"); return; }
             
             go('p-result');
-            document.getElementById('valiny-lera').innerText = "---";
+            document.getElementById('valiny-lera').innerText = "-- : -- : --";
 
             setTimeout(() => {
                 // 1. Lera Prediction
                 let d = new Date();
-                d.setMinutes(d.getMinutes() + Math.floor(Math.random() * 3) + 1);
+                d.setMinutes(d.getMinutes() + Math.floor(Math.random() * 4) + 1);
                 d.setSeconds(Math.floor(Math.random() * 60));
                 document.getElementById('valiny-lera').innerText = 
                     d.getHours().toString().padStart(2,'0') + ":" + 
                     d.getMinutes().toString().padStart(2,'0') + ":" + 
                     d.getSeconds().toString().padStart(2,'0');
 
-                // 2. Côtes kisendrasendra
-                document.getElementById('val-rouge').innerText = "❤️ " + (Math.random() * 2 + 1.1).toFixed(2) + "x";
-                document.getElementById('val-grey').innerText = "🖤 " + (Math.random() * 5 + 2).toFixed(2) + "x";
-                
-                // 3. Tour Status & Loko
-                const statusTxt = document.getElementById('tour-txt');
-                const r = Math.random();
-                if(r > 0.6) {
-                    statusTxt.innerText = "🟢 TOUR VERT";
-                    statusTxt.className = "tour-status status-vert";
-                } else if(r < 0.2) {
-                    statusTxt.innerText = "🔴 TOUR RATSY";
-                    statusTxt.className = "tour-status status-rouge";
-                } else {
-                    statusTxt.innerText = "🤍 TOUR TSARA";
-                    statusTxt.className = "tour-status";
-                }
+                // 2. Random Tour Logic (Miankina amin'ny sary)
+                const types = [
+                    { t: "TOUR TSARA", e: "🤍", c: "tour-badge tsara" },
+                    { t: "TOUR VERT", e: "🟢", c: "tour-badge vert" },
+                    { t: "RAFALE BLEU", e: "💙", c: "tour-badge bleu" },
+                    { t: "TOUR RATSY", e: "🔴", c: "tour-badge ratsy" }
+                ];
+                const rand = types[Math.floor(Math.random() * types.length)];
+                document.getElementById('text-tour').innerText = rand.t;
+                document.getElementById('emoji-tour').innerText = rand.e;
+                document.getElementById('badge-container').className = rand.c;
+
+                // 3. Côtes
+                document.getElementById('c1').innerText = "❤️ " + (Math.random() * 3 + 1.1).toFixed(2) + "x";
+                document.getElementById('c2').innerText = "🖤 " + (Math.random() * 6 + 2).toFixed(2) + "x";
+                document.getElementById('c3').innerText = "💜 " + [50, 100, 150, 200][Math.floor(Math.random()*4)] + "x";
             }, 1000);
         }
     </script>

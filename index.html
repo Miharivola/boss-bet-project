@@ -3,58 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boss Bet Pro - Predictor</title>
+    <title>Boss Bet Pro - Full Functional</title>
     <style>
-        :root { --red: #ff3131; --dark: #0a0a0a; --card: #161616; }
-        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; text-align: center; overflow-x: hidden; }
+        :root { --red: #ff3131; --dark: #0a0a0a; --card: #161616; --grey: #222; }
+        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; text-align: center; }
         
-        .container { max-width: 450px; margin: auto; padding: 15px; min-height: 90vh; }
+        .container { max-width: 450px; margin: auto; padding: 15px; padding-bottom: 90px; min-height: 100vh; }
         .page { display: none; animation: fadeIn 0.3s ease-in; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Style ho an'ny Input Page */
-        .card { background: var(--card); border-radius: 25px; padding: 25px; border: 1px solid #222; margin-top: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .label { color: #888; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; margin-bottom: 5px; display: block; }
-        .input-box { background: #111; padding: 18px; border-radius: 15px; margin-bottom: 20px; font-family: monospace; font-size: 1.5rem; border: 2px solid #333; cursor: pointer; transition: 0.3s; }
-        .selected { border-color: var(--red); background: #1a0a0a; box-shadow: 0 0 15px rgba(255, 49, 49, 0.2); }
+        /* Global Cards */
+        .card { background: var(--card); border-radius: 25px; padding: 20px; border: 1px solid #222; margin-top: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        /* Predictor Styles */
+        .input-box { background: #111; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-family: monospace; font-size: 1.5rem; border: 2px solid #333; cursor: pointer; color: #888; }
+        .selected { border-color: var(--red); background: #1a0a0a; color: white; }
+        .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
+        .key { background: var(--grey); padding: 18px 5px; border-radius: 12px; border: none; color: white; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
+        .key:active { background: #444; }
+        .btn-vinavina { background: var(--red); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; font-size: 1.1rem; margin-top: 15px; }
 
-        /* Keypad */
-        .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
-        .key { background: #222; padding: 18px 5px; border-radius: 12px; border: none; color: white; font-weight: bold; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
-        .key:active { background: #444; transform: scale(0.95); }
-        .btn-action { border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; font-size: 1rem; margin-top: 15px; transition: 0.3s; }
-        .btn-fafana { background: #333; color: white; }
-        .btn-vinavina { background: var(--red); color: white; box-shadow: 0 4px 15px rgba(255, 49, 49, 0.4); }
-
-        /* STYLE SIGNAL LIVE (Mitovy amin'ny sary) */
+        /* Signal Result Screen */
         .signal-screen { 
             background: radial-gradient(circle at center, #251010 0%, #0a0a0a 100%); 
-            border-radius: 30px; padding: 50px 15px; border: 1px solid #333; 
-            position: relative; overflow: hidden; min-height: 420px;
+            border-radius: 30px; padding: 40px 15px; border: 1px solid #333; position: relative; min-height: 380px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        .lion-bg { font-size: 12rem; opacity: 0.08; position: absolute; z-index: 0; pointer-events: none; }
-        .live-tag { background: var(--red); padding: 6px 16px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-bottom: 20px; z-index: 1; display: flex; align-items: center; gap: 5px; }
+        .lion-bg { font-size: 10rem; opacity: 0.08; position: absolute; z-index: 0; pointer-events: none; }
+        .predicted-time { font-size: 4rem; font-weight: bold; color: var(--red); z-index: 1; text-shadow: 0 0 20px rgba(255, 49, 49, 0.5); margin: 10px 0; }
+        .tour-badge { padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; z-index: 1; border: 1.5px solid; margin-bottom: 20px; }
         
-        .predicted-time { font-size: 4.5rem; font-weight: bold; color: var(--red); z-index: 1; font-family: monospace; text-shadow: 0 0 25px rgba(255, 49, 49, 0.5); margin: 15px 0; }
-        
-        /* Tour Badges */
-        .tour-badge { padding: 8px 25px; border-radius: 25px; font-weight: bold; font-size: 0.9rem; z-index: 1; border: 1.5px solid; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; }
+        /* Tour Status Colors */
         .tsara { color: white; border-color: white; }
         .vert { color: #2ecc71; border-color: #2ecc71; }
         .ratsy { color: #ff3131; border-color: #ff3131; }
         .bleu { color: #3498db; border-color: #3498db; }
 
-        .cotes-row { display: flex; justify-content: center; gap: 25px; width: 100%; z-index: 1; font-weight: bold; font-size: 1rem; }
-        .pink { color: #e056fd; }
+        /* Historique Style */
+        .hist-item { background: #1a1a1a; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--red); text-align: left; }
+        .hist-time { font-weight: bold; font-size: 1.1rem; }
+        .hist-info { font-size: 0.8rem; color: #888; }
 
-        .btn-hiverina { background: #1a1a1a; color: white; border: 1px solid #333; padding: 15px; border-radius: 12px; width: 100%; margin-top: 25px; font-weight: bold; cursor: pointer; }
-
-        /* Navigation */
-        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: #0f0f0f; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
-        .nav-item { font-size: 1.5rem; cursor: pointer; opacity: 0.4; transition: 0.3s; }
-        .nav-active { opacity: 1; color: var(--red); }
+        /* Navigation Bottom */
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: #0f0f0f; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; z-index: 1000; }
+        .nav-item { font-size: 1.6rem; cursor: pointer; opacity: 0.3; transition: 0.3s; }
+        .nav-active { opacity: 1; color: var(--red); transform: scale(1.1); }
     </style>
 </head>
 <body>
@@ -62,68 +56,87 @@
     <div class="container">
         
         <div id="p-home" class="page active">
-            <h1 style="color:var(--red); letter-spacing: 2px; margin-bottom: 5px;">BOSS BET</h1>
-            <p style="color: #666; font-size: 0.7rem; margin-top: 0; margin-bottom: 20px;">AVIATOR PREDICTOR</p>
-            
+            <h1 style="color:var(--red);">BOSS BET</h1>
             <div class="card">
-                <span class="label">ORA FIAINGANA</span>
+                <small style="color:#888">ORA FIAINGANA</small>
                 <div id="box-time" class="input-box selected" onclick="mifidy('time')">HH : MM : SS</div>
-                
-                <span class="label">VOAN'NY SERVER (HEX)</span>
-                <div id="box-hex" class="input-box" onclick="mifidy('hex')">6 litera hex</div>
+                <small style="color:#888">HEX CODE</small>
+                <div id="box-hex" class="input-box" onclick="mifidy('hex')">6 LITERA</div>
                 
                 <div class="keypad">
                     <button class="key" onclick="press('1')">1</button><button class="key" onclick="press('2')">2</button><button class="key" onclick="press('3')">3</button><button class="key" onclick="press('4')">4</button>
                     <button class="key" onclick="press('5')">5</button><button class="key" onclick="press('6')">6</button><button class="key" onclick="press('7')">7</button><button class="key" onclick="press('8')">8</button>
                     <button class="key" onclick="press('9')">9</button><button class="key" onclick="press('0')">0</button><button class="key" onclick="press('A')">A</button><button class="key" onclick="press('B')">B</button>
-                    <button class="key" onclick="press('C')">C</button><button class="key" onclick="press('D')">D</button><button class="key" onclick="press('E')">E</button><button class="key" onclick="press('F')">F</button>
                 </div>
-                
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-action btn-fafana" onclick="mamafa()">FAFANA</button>
-                    <button class="btn-action btn-vinavina" onclick="hikajy()">VINAVINA</button>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-vinavina" style="background:#333" onclick="mamafa()">FAFANA</button>
+                    <button class="btn-vinavina" onclick="hikajy()">VINAVINA</button>
                 </div>
             </div>
         </div>
 
         <div id="p-result" class="page">
-            <h1 style="color:var(--red); margin-bottom: 25px;">BOSS BET</h1>
+            <h1 style="color:var(--red);">SIGNAL</h1>
             <div class="signal-screen">
                 <div class="lion-bg">🦁</div>
-                <div class="live-tag">🎯 SIGNAL LIVE</div>
                 <div style="font-size: 2.5rem; z-index: 1;">✈️</div>
-                
-                <div class="predicted-time" id="valiny-lera">00:00:00</div>
-                
-                <div id="badge-container" class="tour-badge tsara">
-                    <span id="emoji-tour">🤍</span> <span id="text-tour">TOUR TSARA</span>
-                </div>
-
-                <div class="cotes-row">
-                    <div style="color: var(--red);" id="c1">❤️ 1.53x</div>
-                    <div style="color: #888;" id="c2">🖤 2.40x</div>
-                    <div class="pink" id="c3">💜 100x</div>
+                <div class="predicted-time" id="res-lera">00:00:00</div>
+                <div id="res-badge" class="tour-badge tsara">🤍 TOUR TSARA</div>
+                <div style="display:flex; gap:20px; font-weight:bold; z-index:1;">
+                    <span style="color:var(--red)" id="res-c1">❤️ 1.50x</span>
+                    <span style="color:#888" id="res-c2">🖤 2.40x</span>
+                    <span style="color:#e056fd" id="res-c3">💜 100x</span>
                 </div>
             </div>
-            <button class="btn-hiverina" onclick="go('p-home')">HIVERINA</button>
+            <button class="btn-vinavina" style="background:#222" onclick="go('p-home', 'nav-home')">HIVERINA</button>
+        </div>
+
+        <div id="p-stats" class="page">
+            <h1 style="color:var(--red);">STATS</h1>
+            <div class="card">
+                <p>Tour Ratsy (🔴): 30%</p>
+                <p>Tour Tsara (⚪): 25%</p>
+                <p>Tour Vert (🟢): 20%</p>
+                <p>Rafale Bleu (💙): 25%</p>
+            </div>
+        </div>
+
+        <div id="p-history" class="page">
+            <h1 style="color:var(--red);">HISTORIQUE</h1>
+            <div id="hist-list">
+                <p style="color:#666">Tsy mbola nanao vinavina ianao.</p>
+            </div>
+        </div>
+
+        <div id="p-account" class="page">
+            <h1 style="color:var(--red);">COMPTE</h1>
+            <div class="card">
+                <div style="width:80px; height:80px; background:var(--grey); border-radius:50%; margin:auto; display:flex; align-items:center; justify-content:center; font-size:2rem; border:2px solid var(--red);">B</div>
+                <h3>Admin Boss Bet</h3>
+                <p style="color:#2ecc71">Statut: Aktiva</p>
+            </div>
         </div>
 
     </div>
 
     <nav>
-        <div class="nav-item nav-active">🏠</div>
-        <div class="nav-item">📊</div>
-        <div class="nav-item">📜</div>
-        <div class="nav-item">👤</div>
+        <div id="nav-home" class="nav-item nav-active" onclick="go('p-home', 'nav-home')">🏠</div>
+        <div id="nav-stats" class="nav-item" onclick="go('p-stats', 'nav-stats')">📊</div>
+        <div id="nav-hist" class="nav-item" onclick="go('p-history', 'nav-hist')">📜</div>
+        <div id="nav-acc" class="nav-item" onclick="go('p-account', 'nav-acc')">👤</div>
     </nav>
 
     <script>
         let focus = 'time';
         let tData = ""; let hData = "";
+        let history = [];
 
-        function go(pId) {
+        function go(pId, nId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('nav-active'));
             document.getElementById(pId).classList.add('active');
+            if(nId) document.getElementById(nId).classList.add('nav-active');
+            if(pId === 'p-history') renderHistory();
         }
 
         function mifidy(t) {
@@ -135,56 +148,67 @@
         function press(v) {
             if(focus === 'time' && tData.length < 6) tData += v;
             else if(focus === 'hex' && hData.length < 6) hData += v;
-            render();
+            renderInput();
         }
 
         function mamafa() {
             if(focus === 'time') tData = tData.slice(0, -1);
             else hData = hData.slice(0, -1);
-            render();
+            renderInput();
         }
 
-        function render() {
+        function renderInput() {
             let h = (tData.substring(0,2) || "HH").padEnd(2, ' ');
             let m = (tData.substring(2,4) || "MM").padEnd(2, ' ');
             let s = (tData.substring(4,6) || "SS").padEnd(2, ' ');
             document.getElementById('box-time').innerText = h + " : " + m + " : " + s;
-            document.getElementById('box-hex').innerText = hData || "6 litera hex";
+            document.getElementById('box-hex').innerText = hData || "6 LITERA";
         }
 
         function hikajy() {
-            if(tData.length < 4) { alert("Fenoy ny lera!"); return; }
+            if(tData.length < 4) return alert("Fenoy ny lera!");
             
             go('p-result');
-            document.getElementById('valiny-lera').innerText = "-- : -- : --";
-
+            
             setTimeout(() => {
-                // 1. Lera Prediction
                 let d = new Date();
-                d.setMinutes(d.getMinutes() + Math.floor(Math.random() * 4) + 1);
-                d.setSeconds(Math.floor(Math.random() * 60));
-                document.getElementById('valiny-lera').innerText = 
-                    d.getHours().toString().padStart(2,'0') + ":" + 
-                    d.getMinutes().toString().padStart(2,'0') + ":" + 
-                    d.getSeconds().toString().padStart(2,'0');
+                d.setMinutes(d.getMinutes() + Math.floor(Math.random() * 5) + 1);
+                let timeStr = d.getHours().toString().padStart(2,'0') + ":" + 
+                              d.getMinutes().toString().padStart(2,'0') + ":" + 
+                              Math.floor(Math.random()*60).toString().padStart(2,'0');
 
-                // 2. Random Tour Logic (Miankina amin'ny sary)
                 const types = [
-                    { t: "TOUR TSARA", e: "🤍", c: "tour-badge tsara" },
-                    { t: "TOUR VERT", e: "🟢", c: "tour-badge vert" },
-                    { t: "RAFALE BLEU", e: "💙", c: "tour-badge bleu" },
-                    { t: "TOUR RATSY", e: "🔴", c: "tour-badge ratsy" }
+                    { t: "TOUR TSARA", e: "🤍", c: "tsara" },
+                    { t: "TOUR VERT", e: "🟢", c: "vert" },
+                    { t: "RAFALE BLEU", e: "💙", c: "bleu" },
+                    { t: "TOUR RATSY", e: "🔴", c: "ratsy" }
                 ];
-                const rand = types[Math.floor(Math.random() * types.length)];
-                document.getElementById('text-tour').innerText = rand.t;
-                document.getElementById('emoji-tour').innerText = rand.e;
-                document.getElementById('badge-container').className = rand.c;
+                let rand = types[Math.floor(Math.random()*types.length)];
+                let c1 = (Math.random()*2+1).toFixed(2);
+                
+                // Update UI
+                document.getElementById('res-lera').innerText = timeStr;
+                document.getElementById('res-badge').innerText = rand.e + " " + rand.t;
+                document.getElementById('res-badge').className = "tour-badge " + rand.c;
+                document.getElementById('res-c1').innerText = "❤️ " + c1 + "x";
 
-                // 3. Côtes
-                document.getElementById('c1').innerText = "❤️ " + (Math.random() * 3 + 1.1).toFixed(2) + "x";
-                document.getElementById('c2').innerText = "🖤 " + (Math.random() * 6 + 2).toFixed(2) + "x";
-                document.getElementById('c3').innerText = "💜 " + [50, 100, 150, 200][Math.floor(Math.random()*4)] + "x";
-            }, 1000);
+                // Save to History
+                history.unshift({ time: timeStr, type: rand.t, emoji: rand.e, cote: c1 });
+            }, 800);
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('hist-list');
+            if(history.length === 0) return;
+            list.innerHTML = history.map(h => `
+                <div class="hist-item">
+                    <div>
+                        <div class="hist-time">${h.time}</div>
+                        <div class="hist-info">${h.emoji} ${h.type}</div>
+                    </div>
+                    <div style="color:var(--red); font-weight:bold;">${h.cote}x</div>
+                </div>
+            `).join('');
         }
     </script>
 </body>

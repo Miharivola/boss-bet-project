@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boss Bet - Time Predictor</title>
+    <title>Boss Bet Pro - Time Predictor</title>
     <style>
         :root { --red: #ff3131; --dark: #121212; --card: rgba(30, 30, 30, 0.9); }
         body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; padding: 0; text-align: center; }
@@ -23,19 +23,28 @@
         .key { background: #333; padding: 18px 5px; border-radius: 10px; border: none; color: white; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
         .btn-red { background: var(--red); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; font-size: 1.1rem; }
 
-        /* PEJY SIGNAL LIVE (Lera no mivoaka) */
+        /* PEJY SIGNAL LIVE */
         .signal-screen { 
             background: radial-gradient(circle, #2a1515, #121212); 
-            border-radius: 25px; padding: 50px 10px; 
+            border-radius: 25px; padding: 40px 10px; 
             border: 1px solid #444; position: relative; overflow: hidden;
-            min-height: 350px; display: flex; flex-direction: column; justify-content: center;
+            min-height: 380px; display: flex; flex-direction: column; justify-content: center;
         }
         .lion-bg { font-size: 10rem; opacity: 0.1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; }
-        .live-tag { background: var(--red); padding: 5px 15px; border-radius: 5px; font-size: 0.9rem; font-weight: bold; display: inline-block; margin-bottom: 20px; z-index: 1; align-self: center; letter-spacing: 1px; }
+        .live-tag { background: var(--red); padding: 5px 15px; border-radius: 5px; font-size: 0.9rem; font-weight: bold; display: inline-block; margin-bottom: 10px; z-index: 1; align-self: center; }
         
-        /* Lera Valiny */
-        .predicted-time { font-size: 4rem; font-weight: bold; color: var(--red); z-index: 1; margin: 15px 0; font-family: monospace; text-shadow: 0 0 20px rgba(255, 49, 49, 0.4); }
-        .tour-status { border: 1px solid white; padding: 8px 25px; border-radius: 25px; display: inline-block; align-self: center; font-weight: bold; font-size: 1rem; z-index: 1; margin-top: 10px; }
+        .predicted-time { font-size: 4rem; font-weight: bold; color: var(--red); z-index: 1; margin: 10px 0; font-family: monospace; text-shadow: 0 0 20px rgba(255, 49, 49, 0.4); }
+        
+        /* Tour Status */
+        .tour-status { border: 1px solid white; padding: 8px 25px; border-radius: 25px; display: inline-block; align-self: center; font-weight: bold; font-size: 0.9rem; z-index: 1; margin-bottom: 25px; }
+        .status-vert { color: #2ecc71; border-color: #2ecc71; }
+        .status-rouge { color: var(--red); border-color: var(--red); }
+
+        /* Côtes any ambany */
+        .cotes-area { display: flex; justify-content: space-around; width: 100%; z-index: 1; margin-top: 10px; font-weight: bold; }
+        .cote-box { font-size: 1rem; }
+        .pink { color: #e056fd; }
+        .grey-text { color: #888; }
 
         /* Nav Bottom */
         nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: #1a1a1a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 100; }
@@ -73,9 +82,16 @@
             <div class="signal-screen">
                 <div class="lion-bg">🦁</div>
                 <div class="live-tag">🎯 SIGNAL LIVE</div>
-                <div style="font-size: 1rem; z-index: 1; color: #aaa;">HIAINGA AMIN'NY:</div>
+                <div style="font-size: 2.5rem; z-index: 1;">✈️</div>
                 <div class="predicted-time" id="valiny-lera">00:00:00</div>
-                <div class="tour-status">🤍 TOUR TSARA</div>
+                
+                <div class="tour-status" id="tour-txt">🤍 TOUR TSARA</div>
+
+                <div class="cotes-area">
+                    <div class="cote-box" style="color: var(--red);" id="val-rouge">❤️ 1.53x</div>
+                    <div class="cote-box grey-text" id="val-grey">🖤 2.40x</div>
+                    <div class="cote-box pink" id="val-pink">💜 100x</div>
+                </div>
             </div>
             <button class="btn-red" style="margin-top: 25px; background: #333;" onclick="go('p-home')">HIVERINA</button>
         </div>
@@ -135,23 +151,37 @@
         function hikajy() {
             if(tData.length < 4) { alert("Fenoy ny lera!"); return; }
             
-            const resLera = document.getElementById('valiny-lera');
-            resLera.innerText = "IKAJIANA...";
-            
             go('p-result');
+            document.getElementById('valiny-lera').innerText = "---";
 
             setTimeout(() => {
-                // Eto isika manao lera prediction (Lera izao + 2 minitra ohatra)
+                // 1. Lera Prediction
                 let d = new Date();
-                d.setMinutes(d.getMinutes() + Math.floor(Math.random() * 5) + 1);
+                d.setMinutes(d.getMinutes() + Math.floor(Math.random() * 3) + 1);
                 d.setSeconds(Math.floor(Math.random() * 60));
+                document.getElementById('valiny-lera').innerText = 
+                    d.getHours().toString().padStart(2,'0') + ":" + 
+                    d.getMinutes().toString().padStart(2,'0') + ":" + 
+                    d.getSeconds().toString().padStart(2,'0');
+
+                // 2. Côtes kisendrasendra
+                document.getElementById('val-rouge').innerText = "❤️ " + (Math.random() * 2 + 1.1).toFixed(2) + "x";
+                document.getElementById('val-grey').innerText = "🖤 " + (Math.random() * 5 + 2).toFixed(2) + "x";
                 
-                let h = d.getHours().toString().padStart(2, '0');
-                let m = d.getMinutes().toString().padStart(2, '0');
-                let s = d.getSeconds().toString().padStart(2, '0');
-                
-                resLera.innerText = h + ":" + m + ":" + s;
-            }, 1200);
+                // 3. Tour Status & Loko
+                const statusTxt = document.getElementById('tour-txt');
+                const r = Math.random();
+                if(r > 0.6) {
+                    statusTxt.innerText = "🟢 TOUR VERT";
+                    statusTxt.className = "tour-status status-vert";
+                } else if(r < 0.2) {
+                    statusTxt.innerText = "🔴 TOUR RATSY";
+                    statusTxt.className = "tour-status status-rouge";
+                } else {
+                    statusTxt.innerText = "🤍 TOUR TSARA";
+                    statusTxt.className = "tour-status";
+                }
+            }, 1000);
         }
     </script>
 </body>

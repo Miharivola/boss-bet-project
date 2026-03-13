@@ -23,7 +23,7 @@
         .input-box { background: #111; padding: 18px; border-radius: 12px; margin-bottom: 15px; font-size: 1.5rem; border: 2px solid #222; color: #666; cursor: pointer; font-family: monospace; }
         .selected { border-color: var(--red); color: white; background: #1a0a0a; }
 
-        /* Keypad FENO (0-9, A-F) */
+        /* Keypad */
         .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
         .key { background: var(--grey); padding: 18px 5px; border-radius: 12px; border: none; color: white; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
         .key:active { background: #444; transform: scale(0.95); }
@@ -60,7 +60,6 @@
 <body>
 
     <div class="container">
-        
         <div id="p-home" class="page active">
             <div class="header"><h1>BOSS BET</h1><div class="subtitle">AVIATOR PREDICTOR LIVE</div></div>
             <div class="card">
@@ -93,7 +92,7 @@
                 <div style="display:flex; gap:25px; font-weight:bold; z-index:1; font-size: 1rem;">
                     <span style="color:var(--red)" id="res-c1">❤️ 1.50x</span>
                     <span style="color:#888" id="res-c2">🖤 4.20x</span>
-                    <span style="color:#e056fd">💜 155x</span>
+                    <span style="color:#e056fd" id="res-c3">💜 155x</span>
                 </div>
             </div>
             <button class="btn btn-grey" style="width:100%; margin-top:25px;" onclick="go('p-home', 'nav-home')">HIVERINA</button>
@@ -108,21 +107,8 @@
                 <div class="dist-row">🔵 RAFALE BLEU <div class="bar-bg"><div class="bar-fill" style="width:15%; background:#3498db;"></div></div> 15%</div>
             </div>
         </div>
-
-        <div id="p-history" class="page">
-            <div class="header"><h1>HISTORIQUE</h1></div>
-            <div id="hist-list" style="margin-top:20px;"></div>
-        </div>
-
-        <div id="p-account" class="page">
-            <div class="header"><h1>COMPTE</h1></div>
-            <div class="card" style="margin-top:30px; padding:40px 20px;">
-                <div style="font-size:4rem; margin-bottom:15px;">👤</div>
-                <h3>Admin Boss Bet</h3>
-                <p style="color:#2ecc71; font-weight:bold;">PREMIUM ACTIVE</p>
-            </div>
-        </div>
-
+        <div id="p-history" class="page"><div class="header"><h1>HISTORIQUE</h1></div><div id="hist-list" style="margin-top:20px;"></div></div>
+        <div id="p-account" class="page"><div class="header"><h1>COMPTE</h1></div><div class="card" style="margin-top:30px; padding:40px 20px;"><div style="font-size:4rem; margin-bottom:15px;">👤</div><h3>Admin Boss Bet</h3><p style="color:#2ecc71; font-weight:bold;">PREMIUM ACTIVE</p></div></div>
     </div>
 
     <nav>
@@ -158,10 +144,7 @@
             renderInput();
         }
 
-        function mamafa() {
-            if(focus === 'time') tData = ""; else hData = "";
-            renderInput();
-        }
+        function mamafa() { if(focus === 'time') tData = ""; else hData = ""; renderInput(); }
 
         function renderInput() {
             let h = (tData.substring(0,2) || "00").padEnd(2, '0');
@@ -171,34 +154,49 @@
             document.getElementById('box-hex').innerText = hData || "HEX CODE";
         }
 
+        // --- CALCULATOR LOGIC (TENA MIASA) ---
         function hikajy() {
             if(tData.length < 4) return alert("Ampidiro ny lera!");
             go('p-result', 'nav-target');
             document.getElementById('res-lera').innerText = "CALCUL...";
 
             setTimeout(() => {
-                let seed = parseInt(tData) + parseInt(hData, 16) || Math.random() * 999;
+                // Seed miankina amin'ny hex sy lera
+                let hexVal = parseInt(hData, 16) || 0;
+                let timeVal = parseInt(tData) || 0;
+                let seed = hexVal + timeVal;
+
+                // 1. Lera Prediction
                 let d = new Date();
-                d.setMinutes(d.getMinutes() + (Math.floor(seed % 5) + 1));
-                d.setSeconds(Math.floor(seed % 60));
-                
+                d.setMinutes(d.getMinutes() + (Math.floor(seed % 8) + 1));
+                d.setSeconds(Math.floor((seed * 7) % 60));
                 let timeStr = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0') + ":" + d.getSeconds().toString().padStart(2,'0');
+
+                // 2. Karazana Tour
                 const types = [
                     { t: "TOUR TSARA", e: "🤍", c: "white" },
                     { t: "TOUR VERT", e: "🟢", c: "#2ecc71" },
                     { t: "RAFALE BLEU", e: "💙", c: "#3498db" },
                     { t: "TOUR RATSY", e: "🔴", c: "#ff3131" }
                 ];
-                let rand = types[Math.floor(seed % types.length)];
-                let cote = (1.1 + (seed % 40) / 10).toFixed(2);
+                let rand = types[seed % types.length];
 
+                // 3. Kajy ny Côte (❤️, 🖤, 💜)
+                let c1 = (1.1 + (seed % 19) / 10).toFixed(2); // ❤️ (1.1x hatramin'ny 2.9x)
+                let c2 = (2.1 + (seed % 85) / 10).toFixed(2); // 🖤 (2.1x hatramin'ny 10x)
+                let c3 = Math.floor(50 + (seed % 950));      // 💜 (50x hatramin'ny 1000x)
+
+                // Update UI
                 document.getElementById('res-lera').innerText = timeStr;
                 document.getElementById('res-badge').innerText = rand.e + " " + rand.t;
                 document.getElementById('res-badge').style.borderColor = rand.c;
                 document.getElementById('res-badge').style.color = rand.c;
-                document.getElementById('res-c1').innerText = "❤️ " + cote + "x";
+                
+                document.getElementById('res-c1').innerText = "❤️ " + c1 + "x";
+                document.getElementById('res-c2').innerText = "🖤 " + c2 + "x";
+                document.getElementById('res-c3').innerText = "💜 " + c3 + "x";
 
-                historyData.unshift({ time: timeStr, type: rand.t, emoji: rand.e, cote: cote });
+                historyData.unshift({ time: timeStr, type: rand.t, emoji: rand.e, cote: c3 });
             }, 1500);
         }
 

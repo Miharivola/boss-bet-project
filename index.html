@@ -7,17 +7,14 @@
     <style>
         :root { --red: #ff3131; --dark: #0a0a0a; --card: #161616; --grey: #222; }
         body { background: var(--dark); color: white; font-family: 'Arial', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
-        
         .container { max-width: 450px; margin: auto; padding: 15px; padding-bottom: 90px; min-height: 100vh; text-align: center; }
         .page { display: none; animation: fadeIn 0.3s ease; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Header */
+        /* Header & Cards */
         .header h1 { color: var(--red); margin-bottom: 5px; font-size: 1.8rem; letter-spacing: 2px; }
         .subtitle { font-size: 0.7rem; color: #888; letter-spacing: 1px; margin-bottom: 20px; }
-
-        /* Input Card */
         .card { background: var(--card); border-radius: 20px; padding: 25px 15px; border: 1px solid #333; margin-bottom: 20px; position: relative; }
         .label { font-size: 0.75rem; color: #aaa; margin-bottom: 10px; display: block; text-align: left; padding-left: 10px; }
         .input-box { background: #111; padding: 18px; border-radius: 12px; margin-bottom: 15px; font-size: 1.5rem; border: 2px solid #222; color: #666; cursor: pointer; font-family: monospace; }
@@ -28,33 +25,24 @@
         .key { background: var(--grey); padding: 18px 5px; border-radius: 12px; border: none; color: white; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
         .key:active { background: #444; transform: scale(0.95); }
 
-        /* Action Buttons */
-        .row { display: flex; gap: 10px; margin-top: 20px; }
-        .btn { border-radius: 12px; border: none; font-weight: bold; padding: 18px; cursor: pointer; flex: 1; font-size: 1rem; }
-        .btn-red { background: var(--red); color: white; box-shadow: 0 5px 15px rgba(255, 49, 49, 0.3); }
-        .btn-grey { background: #333; color: white; }
-
-        /* Signal Screen */
-        .signal-screen { 
-            background: radial-gradient(circle at center, #2a1111 0%, #0a0a0a 100%);
-            border-radius: 30px; padding: 50px 10px; border: 1px solid #333; position: relative; min-height: 400px;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
+        /* Result Screen */
+        .signal-screen { background: radial-gradient(circle at center, #2a1111 0%, #0a0a0a 100%); border-radius: 30px; padding: 50px 10px; border: 1px solid #333; position: relative; min-height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .lion-bg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 11rem; opacity: 0.07; z-index: 0; pointer-events: none; }
-        .live-tag { background: var(--red); padding: 6px 16px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; margin-bottom: 20px; z-index: 1; letter-spacing: 1px; }
         .predicted-time { font-size: 4.5rem; font-weight: bold; color: var(--red); margin: 15px 0; z-index: 1; font-family: monospace; text-shadow: 0 0 25px rgba(255,49,49,0.5); }
         .badge { border: 1.5px solid white; border-radius: 25px; padding: 10px 25px; display: inline-block; font-size: 0.9rem; font-weight: bold; margin-bottom: 35px; z-index: 1; }
 
-        /* History & Stats */
+        /* Tips & Stats */
+        .tip-box { background: #1a1010; border: 1px dashed var(--red); border-radius: 15px; padding: 15px; text-align: left; margin-top: 20px; }
+        .tip-title { color: var(--red); font-weight: bold; font-size: 0.9rem; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+        .tip-text { font-size: 0.75rem; color: #ccc; line-height: 1.4; }
         .dist-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 0.8rem; text-align: left; }
         .bar-bg { flex: 1; background: #222; height: 8px; border-radius: 10px; }
         .bar-fill { height: 100%; border-radius: 10px; }
-        .hist-item { background: #161616; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--red); }
 
-        /* Navigation */
+        /* Nav */
         nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: #0a0a0a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; z-index: 1000; }
         .nav-item { font-size: 1.6rem; cursor: pointer; opacity: 0.3; transition: 0.3s; }
-        .nav-active { opacity: 1; color: var(--red); transform: translateY(-5px); }
+        .nav-active { opacity: 1; color: var(--red); }
     </style>
 </head>
 <body>
@@ -63,20 +51,19 @@
         <div id="p-home" class="page active">
             <div class="header"><h1>BOSS BET</h1><div class="subtitle">AVIATOR PREDICTOR LIVE</div></div>
             <div class="card">
-                <span class="label">ORA FIAINGANA</span>
+                <span class="label">ORA FIAINGANA (DERNIER CÔTE)</span>
                 <div id="box-time" class="input-box selected" onclick="mifidy('time')">00 : 00 : 00</div>
                 <span class="label">SERVER HASH (HEX)</span>
                 <div id="box-hex" class="input-box" onclick="mifidy('hex')">HEX CODE</div>
-                
                 <div class="keypad">
                     <button class="key" onclick="press('1')">1</button><button class="key" onclick="press('2')">2</button><button class="key" onclick="press('3')">3</button><button class="key" onclick="press('A')">A</button>
                     <button class="key" onclick="press('4')">4</button><button class="key" onclick="press('5')">5</button><button class="key" onclick="press('6')">6</button><button class="key" onclick="press('B')">B</button>
                     <button class="key" onclick="press('7')">7</button><button class="key" onclick="press('8')">8</button><button class="key" onclick="press('9')">9</button><button class="key" onclick="press('C')">C</button>
                     <button class="key" onclick="press('D')">D</button><button class="key" onclick="press('0')">0</button><button class="key" onclick="press('E')">E</button><button class="key" onclick="press('F')">F</button>
                 </div>
-                <div class="row">
-                    <button class="btn btn-grey" onclick="mamafa()">FAFANA</button>
-                    <button class="btn btn-red" onclick="hikajy()">VINAVINA</button>
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button style="flex:1; padding:18px; border-radius:12px; border:none; background:#333; color:white; font-weight:bold;" onclick="mamafa()">FAFANA</button>
+                    <button style="flex:1; padding:18px; border-radius:12px; border:none; background:var(--red); color:white; font-weight:bold;" onclick="hikajy()">VINAVINA</button>
                 </div>
             </div>
         </div>
@@ -85,8 +72,6 @@
             <div class="header"><h1>BOSS BET</h1></div>
             <div class="signal-screen">
                 <div class="lion-bg">🦁</div>
-                <div class="live-tag">🎯 SIGNAL LIVE</div>
-                <div style="font-size: 2.5rem; z-index: 1;">✈️</div>
                 <div class="predicted-time" id="res-lera">--:--:--</div>
                 <div id="res-badge" class="badge">🤍 TOUR TSARA</div>
                 <div style="display:flex; gap:25px; font-weight:bold; z-index:1; font-size: 1rem;">
@@ -95,7 +80,7 @@
                     <span style="color:#e056fd" id="res-c3">💜 155x</span>
                 </div>
             </div>
-            <button class="btn btn-grey" style="width:100%; margin-top:25px;" onclick="go('p-home', 'nav-home')">HIVERINA</button>
+            <button style="width:100%; padding:15px; margin-top:20px; border-radius:12px; border:none; background:#222; color:white; font-weight:bold;" onclick="go('p-home', 'nav-home')">HIVERINA</button>
         </div>
 
         <div id="p-stats" class="page">
@@ -106,7 +91,17 @@
                 <div class="dist-row">🟢 TOUR VERT <div class="bar-bg"><div class="bar-fill" style="width:20%; background:#2ecc71;"></div></div> 20%</div>
                 <div class="dist-row">🔵 RAFALE BLEU <div class="bar-bg"><div class="bar-fill" style="width:15%; background:#3498db;"></div></div> 15%</div>
             </div>
+
+            <div class="tip-box">
+                <div class="tip-title">💡 TOROHEVITRA (TIPS)</div>
+                <div class="tip-text">
+                    • <b>Lera fiaingana:</b> Alao foana ny lera nivoahan'ny côte farany teo (tsindrio ny lera ao amin'ny Aviator).<br><br>
+                    • <b>Côte tsara alaina:</b> Ny côte <b>2x no ho ambony</b> (violet na rose) no tsara iaingana raha te hahazo valiny marina.<br><br>
+                    • <b>Hex Code:</b> Kopio ny litera 6 voalohany amin'ny Server Hash ao amin'ny "Provably Fair".
+                </div>
+            </div>
         </div>
+
         <div id="p-history" class="page"><div class="header"><h1>HISTORIQUE</h1></div><div id="hist-list" style="margin-top:20px;"></div></div>
         <div id="p-account" class="page"><div class="header"><h1>COMPTE</h1></div><div class="card" style="margin-top:30px; padding:40px 20px;"><div style="font-size:4rem; margin-bottom:15px;">👤</div><h3>Admin Boss Bet</h3><p style="color:#2ecc71; font-weight:bold;">PREMIUM ACTIVE</p></div></div>
     </div>
@@ -120,9 +115,7 @@
     </nav>
 
     <script>
-        let focus = 'time';
-        let tData = ""; let hData = "";
-        let historyData = [];
+        let focus = 'time'; let tData = ""; let hData = ""; let historyData = [];
 
         function go(pId, nId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -154,25 +147,21 @@
             document.getElementById('box-hex').innerText = hData || "HEX CODE";
         }
 
-        // --- CALCULATOR LOGIC (TENA MIASA) ---
         function hikajy() {
             if(tData.length < 4) return alert("Ampidiro ny lera!");
             go('p-result', 'nav-target');
             document.getElementById('res-lera').innerText = "CALCUL...";
 
             setTimeout(() => {
-                // Seed miankina amin'ny hex sy lera
-                let hexVal = parseInt(hData, 16) || 0;
-                let timeVal = parseInt(tData) || 0;
-                let seed = hexVal + timeVal;
+                let hV = parseInt(hData, 16) || 0;
+                let tV = parseInt(tData) || 0;
+                let seed = hV + tV + Math.floor(Date.now() / 100000);
 
-                // 1. Lera Prediction
                 let d = new Date();
-                d.setMinutes(d.getMinutes() + (Math.floor(seed % 8) + 1));
-                d.setSeconds(Math.floor((seed * 7) % 60));
+                d.setMinutes(d.getMinutes() + (Math.floor(seed % 6) + 1));
+                d.setSeconds(Math.floor((seed * 13) % 60));
+                
                 let timeStr = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0') + ":" + d.getSeconds().toString().padStart(2,'0');
-
-                // 2. Karazana Tour
                 const types = [
                     { t: "TOUR TSARA", e: "🤍", c: "white" },
                     { t: "TOUR VERT", e: "🟢", c: "#2ecc71" },
@@ -180,35 +169,28 @@
                     { t: "TOUR RATSY", e: "🔴", c: "#ff3131" }
                 ];
                 let rand = types[seed % types.length];
+                let c1 = (1.1 + (seed % 15) / 10).toFixed(2);
+                let c2 = (2.1 + (seed % 70) / 10).toFixed(2);
+                let c3 = Math.floor(50 + (seed % 850));
 
-                // 3. Kajy ny Côte (❤️, 🖤, 💜)
-                let c1 = (1.1 + (seed % 19) / 10).toFixed(2); // ❤️ (1.1x hatramin'ny 2.9x)
-                let c2 = (2.1 + (seed % 85) / 10).toFixed(2); // 🖤 (2.1x hatramin'ny 10x)
-                let c3 = Math.floor(50 + (seed % 950));      // 💜 (50x hatramin'ny 1000x)
-
-                // Update UI
                 document.getElementById('res-lera').innerText = timeStr;
                 document.getElementById('res-badge').innerText = rand.e + " " + rand.t;
                 document.getElementById('res-badge').style.borderColor = rand.c;
                 document.getElementById('res-badge').style.color = rand.c;
-                
                 document.getElementById('res-c1').innerText = "❤️ " + c1 + "x";
                 document.getElementById('res-c2').innerText = "🖤 " + c2 + "x";
                 document.getElementById('res-c3').innerText = "💜 " + c3 + "x";
 
                 historyData.unshift({ time: timeStr, type: rand.t, emoji: rand.e, cote: c3 });
-            }, 1500);
+            }, 1200);
         }
 
         function renderHistory() {
             const list = document.getElementById('hist-list');
             if(historyData.length === 0) { list.innerHTML = "<p style='color:#444'>Tsy misy tantara.</p>"; return; }
             list.innerHTML = historyData.map(h => `
-                <div class="hist-item">
-                    <div style="text-align:left">
-                        <div style="font-weight:bold; color:var(--red)">${h.time}</div>
-                        <small style="color:#888">${h.emoji} ${h.type}</small>
-                    </div>
+                <div style="background:#161616; padding:15px; border-radius:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border-left:5px solid var(--red);">
+                    <div style="text-align:left"><div style="font-weight:bold; color:var(--red)">${h.time}</div><small style="color:#888">${h.emoji} ${h.type}</small></div>
                     <div style="font-weight:bold; color:#2ecc71">${h.cote}x</div>
                 </div>
             `).join('');

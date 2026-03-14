@@ -25,17 +25,14 @@
         .btn-vinavina { flex: 1.5; background: var(--red); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; }
         .action-row { display: flex; gap: 10px; margin-top: 20px; }
 
-        /* Results */
+        /* Results & Historique Items */
         .status-banner { background: var(--green); color: black; padding: 12px; border-radius: 10px; font-weight: bold; margin-bottom: 20px; }
-        .pred-item { background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 1px solid #ddd; text-align: left; color: #333; }
+        .pred-item, .hist-item { background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 1px solid #ddd; text-align: left; color: #333; }
         .pred-time { font-size: 1.8rem; font-weight: bold; font-family: monospace; }
         .pred-badge { padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: bold; float: right; }
         .pred-values { display: flex; gap: 15px; margin-top: 8px; font-weight: bold; font-size: 0.9rem; border-top: 1px solid #eee; padding-top: 8px; }
 
-        /* Tips & History */
-        .tip-box { background: var(--card); border: 1px dashed var(--red); border-radius: 15px; padding: 15px; text-align: left; margin-bottom: 15px; font-size:0.75rem; }
-        .hist-item { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 10px; border-left: 4px solid var(--red); text-align: left; }
-
+        /* Navigation */
         nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: var(--dark); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
         .nav-item { font-size: 1.6rem; cursor: pointer; opacity: 0.3; }
         .nav-active { opacity: 1; color: var(--red); }
@@ -66,7 +63,9 @@
 
         <div id="p-stats" class="page">
             <h2 style="color:var(--red)">CONSEILS & TIPS</h2>
-            <div class="tip-box">🔵 MANGA: 1.00x-1.99x | 🟣 VIOLET: 2.00x-9.99x<br>🟢 VERT: 10.00x+ | 💖 ROSE: 100.00x+</div>
+            <div style="background:var(--card); padding:15px; border-radius:15px; text-align:left; font-size:0.8rem;">
+                🔵 MANGA: 1.00x-1.99x<br>🟣 VIOLET: 2.00x-9.99x<br>🟢 VERT: 10.00x+<br>💖 ROSE: 100.00x+
+            </div>
         </div>
 
         <div id="p-result" class="page">
@@ -75,7 +74,10 @@
             <button style="width:100%; padding:15px; margin-top:20px; border-radius:12px; border:none; background:#444; color:white; font-weight:bold;" onclick="go('p-home', 'nav-home')">HIVERINA</button>
         </div>
 
-        <div id="p-history" class="page"><h2 style="color:var(--red)">HISTORIQUE</h2><div id="hist-list"></div></div>
+        <div id="p-history" class="page">
+            <h2 style="color:var(--red)">HISTORIQUE</h2>
+            <div id="hist-list"></div>
+        </div>
     </div>
 
     <nav>
@@ -109,7 +111,6 @@
             const head = document.getElementById('status-head');
             go('p-result', 'nav-target');
             
-            // TENA KAJY (Algorithm)
             let hexNum = parseInt(hData, 16) || 1;
             let timeNum = parseInt(tData) || 1;
             let seed = hexNum + timeNum;
@@ -117,41 +118,50 @@
             setTimeout(() => {
                 list.innerHTML = "";
                 let isVertOverall = (seed % 5 === 0);
-                head.innerText = isVertOverall ? "✅🔥 PRÉDICTION VERT RAIKA" : "⚠️ CYCLE VARIABLE - TANDREMO";
+                head.innerText = isVertOverall ? "✅🔥 PRÉDICTION VERT RAIKA" : "⚠️ CYCLE VARIABLE";
                 head.style.background = isVertOverall ? "#2ecc71" : "#f39c12";
 
                 for(let i=1; i<=3; i++) {
                     let calcSeed = seed + (i * 1234);
-                    let resultType = calcSeed % 3; // 0=Manga, 1=Violet, 2=Vert
-                    
-                    let d = new Date(); d.setMinutes(d.getMinutes() + (i * 4) + (calcSeed % 5));
+                    let resultType = calcSeed % 3; 
+                    let d = new Date(); d.setMinutes(d.getMinutes() + (i * 4));
                     let timeStr = d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0')+":"+(calcSeed%60).toString().padStart(2,'0');
                     
-                    let label = "TOUR TSARA"; let col = "#9b59b6"; let badgeCol = "rgba(155, 89, 182, 0.1)";
+                    let label = "TOUR TSARA"; let col = "#9b59b6";
                     let r = (2 + (calcSeed % 5)).toFixed(2);
                     let g = (5 + (calcSeed % 4)).toFixed(2);
                     let p = (10 + (calcSeed % 20)).toFixed(2);
 
-                    if(resultType === 0) { label = "TOUR RATSY"; col = "#3498db"; badgeCol = "rgba(52, 152, 219, 0.1)"; r=(1.1).toFixed(2); g=(1.5).toFixed(2); p=(1.8).toFixed(2); }
-                    else if(resultType === 2 || isVertOverall) { label = "TOUR VERT"; col = "#2ecc71"; badgeCol = "rgba(46, 204, 113, 0.1)"; r=(12+i).toFixed(2); g=(15+i).toFixed(2); p=(90+i).toFixed(2); }
+                    if(resultType === 0) { label = "TOUR RATSY"; col = "#3498db"; r=(1.1).toFixed(2); g=(1.4).toFixed(2); p=(1.9).toFixed(2); }
+                    else if(resultType === 2 || isVertOverall) { label = "TOUR VERT"; col = "#2ecc71"; r=(12+i).toFixed(2); g=(15+i).toFixed(2); p=(90+i).toFixed(2); }
 
                     list.innerHTML += `
                         <div class="pred-item" style="border-left: 5px solid ${col}">
-                            <span class="pred-badge" style="border:1px solid ${col}; color:${col}; background:${badgeCol}">${label}</span>
+                            <span class="pred-badge" style="border:1px solid ${col}; color:${col}">${label}</span>
                             <div class="pred-time" style="color:${col}">${timeStr}</div>
                             <div class="pred-values">
                                 <span style="color:#ff4d4d">❤️ ${r}x</span> <span style="color:#555">🖤 ${g}x</span> <span style="color:#ff79c6">💖 ${p}x</span>
                             </div>
                         </div>
                     `;
-                    history.unshift({time: timeStr, r: r, label: label, col: col});
+                    // Tehirizina ny côte 3 ato amin'ny history
+                    history.unshift({time: timeStr, r: r, g: g, p: p, label: label, col: col});
                 }
-            }, 1000);
+            }, 800);
         }
 
         function renderHistory() {
+            // Mivoaka daholo ny côte 3 isaky ny tour ato amin'ny Historique
             document.getElementById('hist-list').innerHTML = history.map(h => `
-                <div class="hist-item" style="border-left-color:${h.col}"><b>${h.time}</b> - <span style="color:${h.col}">${h.r}x (${h.label})</span></div>
+                <div class="hist-item" style="border-left: 5px solid ${h.col}">
+                    <span class="pred-badge" style="border:1px solid ${h.col}; color:${h.col}">${h.label}</span>
+                    <div style="font-weight:bold; font-size:1.1rem; color:${h.col}">${h.time}</div>
+                    <div class="pred-values">
+                        <span style="color:#ff4d4d">❤️ ${h.r}x</span> 
+                        <span style="color:#555">🖤 ${h.g}x</span> 
+                        <span style="color:#ff79c6">💖 ${h.p}x</span>
+                    </div>
+                </div>
             `).join('');
         }
     </script>

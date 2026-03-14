@@ -28,11 +28,16 @@
         .btn-famafana { flex: 1; background: #333; color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; }
         .btn-vinavina { flex: 1.5; background: var(--red); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; }
 
-        /* Tips Box */
-        .tip-box { background: #1a1010; border: 1px dashed var(--red); border-radius: 15px; padding: 15px; text-align: left; margin-top: 20px; }
-        .tip-title { color: var(--red); font-weight: bold; font-size: 0.9rem; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        /* Tips Box Styling */
+        .tip-box { background: #1a1010; border: 1px dashed var(--red); border-radius: 15px; padding: 15px; text-align: left; margin-bottom: 15px; }
+        .tip-title { color: var(--red); font-weight: bold; font-size: 0.9rem; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; text-transform: uppercase; }
         .tip-text { font-size: 0.75rem; color: #ccc; line-height: 1.5; }
-        .tip-item { margin-bottom: 10px; }
+        .tip-item { margin-bottom: 8px; }
+
+        /* Signal Result Screen */
+        .signal-screen { background: radial-gradient(circle at center, #2a1111 0%, #0a0a0a 100%); border-radius: 30px; padding: 50px 10px; border: 1px solid #333; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 400px; }
+        .predicted-time { font-size: 4.5rem; font-weight: bold; color: var(--red); margin: 15px 0; font-family: monospace; text-shadow: 0 0 25px rgba(255,49,49,0.5); }
+        .badge { border: 1.5px solid white; border-radius: 25px; padding: 10px 25px; display: inline-block; font-size: 0.9rem; font-weight: bold; margin-bottom: 35px; }
 
         /* Historique Style */
         .hist-item { background: rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 15px; margin-bottom: 15px; border-left: 4px solid var(--red); text-align: left; position: relative; }
@@ -40,7 +45,7 @@
         .hist-badge { position: absolute; top: 15px; right: 15px; padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); }
         .hist-cotes { display: flex; gap: 15px; margin-top: 10px; font-size: 0.9rem; font-weight: bold; }
 
-        /* Nav */
+        /* Navigation */
         nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: #0a0a0a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; z-index: 1000; }
         .nav-item { font-size: 1.6rem; cursor: pointer; opacity: 0.3; transition: 0.3s; }
         .nav-active { opacity: 1; color: var(--red); }
@@ -71,10 +76,41 @@
             </div>
         </div>
 
+        <div id="p-stats" class="page">
+            <h2 style="color:var(--red)">CONSEILS & TIPS</h2>
+            
+            <div class="tip-box">
+                <div class="tip-title">📊 LOKO SY CÔTE</div>
+                <div class="tip-text">
+                    <div class="tip-item">🔵 <b>MANGA:</b> 1.00x hatramin'ny 1.99x</div>
+                    <div class="tip-item">🟣 <b>VIOLET:</b> 2.00x hatramin'ny 9.99x</div>
+                    <div class="tip-item">🟢 <b>VERT:</b> 10.00x hatramin'ny 99.99x</div>
+                    <div class="tip-item">💖 <b>ROSE:</b> 100.00x no ho ambony</div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <div class="tip-title">💰 GESTION DE MISE</div>
+                <div class="tip-text">
+                    • <b>Cashout aloha:</b> Miala amin'ny 1.50x na 2.00x hamonjena ny "mise".<br>
+                    • <b>Aza enjehina:</b> Raha nisy lera tsy nety, miandrasa 15 minitra vao mamerina.
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <div class="tip-title">🔄 CYCLE & HEX</div>
+                <div class="tip-text">
+                    • <b>Cycle Mora:</b> Mitranga matetika aorian'ny Rose (100x).<br>
+                    • <b>Cycle Sarotra:</b> Raha misy manga mihoatra ny 3 misesy, miandrasa aloha.<br>
+                    • <b>Hex Signal:</b> Raha manomboka amin'ny "f" na "e" ny Hex Code, matetika misy côte avo.
+                </div>
+            </div>
+        </div>
+
         <div id="p-result" class="page">
-            <div id="res-screen" style="background: radial-gradient(circle at center, #2a1111 0%, #0a0a0a 100%); border-radius: 30px; padding: 50px 10px; border: 1px solid #333; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 400px;">
-                <div style="font-size: 4.5rem; font-weight: bold; color: var(--red); margin: 15px 0; font-family: monospace; text-shadow: 0 0 25px rgba(255,49,49,0.5);" id="res-lera">--:--:--</div>
-                <div id="res-badge" style="border: 1.5px solid white; border-radius: 25px; padding: 10px 25px; display: inline-block; font-size: 0.9rem; font-weight: bold; margin-bottom: 35px;">🤍 TOUR TSARA</div>
+            <div class="signal-screen">
+                <div class="predicted-time" id="res-lera">--:--:--</div>
+                <div id="res-badge" class="badge">🤍 TOUR TSARA</div>
                 <div style="display:flex; gap:25px; font-weight:bold; font-size: 1rem;">
                     <span style="color:var(--red)" id="res-c1">❤️ 1.50x</span>
                     <span style="color:#888" id="res-c2">🖤 4.20x</span>
@@ -82,29 +118,6 @@
                 </div>
             </div>
             <button style="width:100%; padding:15px; margin-top:20px; border-radius:12px; border:none; background:#222; color:white; font-weight:bold;" onclick="go('p-home', 'nav-home')">HIVERINA</button>
-        </div>
-
-        <div id="p-stats" class="page">
-            <h2 style="color:var(--red)">CONSEILS & TIPS</h2>
-            
-            <div class="tip-box">
-                <div class="tip-title">📊 FAMARITANA NY TOUR</div>
-                <div class="tip-text">
-                    <div class="tip-item">🔵 <b>TOUR MANGA:</b> 1.00x hatramin'ny 1.99x</div>
-                    <div class="tip-item">🟣 <b>TOUR VIOLET:</b> 2.00x hatramin'ny 9.99x</div>
-                    <div class="tip-item">🟢 <b>TOUR VERT:</b> 10.00x hatramin'ny 99.99x</div>
-                    <div class="tip-item">💖 <b>TOUR ROSE:</b> 100.00x no ho ambony</div>
-                </div>
-            </div>
-
-            <div class="tip-box" style="margin-top: 15px; border-color: #555;">
-                <div class="tip-title">💡 TOROHEVITRA FANAMPINY</div>
-                <div class="tip-text">
-                    • Alao foana ny lera nivoahan'ny côte <b>2.00x no ho ambony</b> hatao ora fiaingana.<br>
-                    • Ny Hex Code dia raisina ao amin'ny "Provably Fair" (litera 6 voalohany).<br>
-                    • Raha misy manga (1.00x) misesy mihoatra ny 3, dia miandrasa kely vao manao vinavina indray.
-                </div>
-            </div>
         </div>
 
         <div id="p-history" class="page">

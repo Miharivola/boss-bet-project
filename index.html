@@ -3,30 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boss Bet Pro - Classic</title>
+    <title>Boss Bet Pro - Ultimate Predictor</title>
     <style>
-        :root { --red: #ff3131; --dark: #0a0a0a; --card: #161616; --grey: #222; --text: #ffffff; --green: #2ecc71; }
+        :root { --red: #ff3131; --dark: #0a0a0a; --card: #161616; --grey: #222; --text: #ffffff; --green: #2ecc71; --orange: #f39c12; --blue: #3498db; --purple: #9b59b6; }
         body { background: var(--dark); color: var(--text); font-family: 'Arial', sans-serif; margin: 0; padding: 0; }
         .container { max-width: 450px; margin: auto; padding: 15px; padding-bottom: 90px; text-align: center; }
-        .page { display: none; }
+        .page { display: none; animation: fadeIn 0.3s ease; }
         .active { display: block; }
-        
-        .card { background: var(--card); border-radius: 20px; padding: 25px 15px; border: 1px solid #333; margin-bottom: 20px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Input Cards */
+        .card { background: var(--card); border-radius: 20px; padding: 25px 15px; border: 1px solid #333; margin-bottom: 20px; position: relative; }
         .label { font-size: 0.75rem; color: #888; margin-bottom: 10px; display: block; text-align: left; padding-left: 10px; }
         .input-box { background: rgba(0,0,0,0.1); padding: 18px; border-radius: 12px; margin-bottom: 15px; font-size: 1.5rem; border: 2px solid #333; color: var(--text); cursor: pointer; font-family: monospace; }
-        .selected { border-color: var(--red); }
+        .selected { border-color: var(--red); background: rgba(255, 49, 49, 0.05); }
 
+        /* Keypad */
         .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
         .key { background: var(--grey); padding: 18px 5px; border-radius: 12px; border: none; color: var(--text); font-weight: bold; font-size: 1.2rem; cursor: pointer; }
-        .btn-vinavina { width: 100%; background: var(--red); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .btn-famafana { flex: 1; background: #555; color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; }
+        .btn-vinavina { flex: 1.5; background: var(--red); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .action-row { display: flex; gap: 10px; margin-top: 20px; }
 
+        /* Results & Historique Items */
         .status-banner { background: var(--green); color: black; padding: 12px; border-radius: 10px; font-weight: bold; margin-bottom: 20px; }
-        .pred-item { background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 1px solid #ddd; text-align: left; color: #333; }
-        .pred-time { font-size: 1.8rem; font-weight: bold; color: var(--green); font-family: monospace; }
-        .pred-badge { border: 1px solid var(--green); color: var(--green); padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: bold; float: right; }
+        .pred-item, .hist-item { background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 1px solid #ddd; text-align: left; color: #333; }
+        .pred-time { font-size: 1.8rem; font-weight: bold; font-family: monospace; }
+        .pred-badge { padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: bold; float: right; }
         .pred-values { display: flex; gap: 15px; margin-top: 8px; font-weight: bold; font-size: 0.9rem; border-top: 1px solid #eee; padding-top: 8px; }
-        .pred-tip { font-size: 0.7rem; color: #777; margin-top: 8px; font-style: italic; }
 
+        /* Navigation */
         nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: var(--dark); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
         .nav-item { font-size: 1.6rem; cursor: pointer; opacity: 0.3; }
         .nav-active { opacity: 1; color: var(--red); }
@@ -48,12 +54,22 @@
                     <button class="key" onclick="press('7')">7</button><button class="key" onclick="press('8')">8</button><button class="key" onclick="press('9')">9</button><button class="key" onclick="press('C')">C</button>
                     <button class="key" onclick="press('D')">D</button><button class="key" onclick="press('0')">0</button><button class="key" onclick="press('E')">E</button><button class="key" onclick="press('F')">F</button>
                 </div>
-                <button class="btn-vinavina" onclick="hikajy()">VINAVINA</button>
+                <div class="action-row">
+                    <button class="btn-famafana" onclick="mamafa()">FAFANA</button>
+                    <button class="btn-vinavina" onclick="hikajy()">VINAVINA</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="p-stats" class="page">
+            <h2 style="color:var(--red)">CONSEILS & TIPS</h2>
+            <div style="background:var(--card); padding:15px; border-radius:15px; text-align:left; font-size:0.8rem;">
+                🔵 MANGA: 1.00x-1.99x<br>🟣 VIOLET: 2.00x-9.99x<br>🟢 VERT: 10.00x+<br>💖 ROSE: 100.00x+
             </div>
         </div>
 
         <div id="p-result" class="page">
-            <div class="status-banner">✅🔥 PRÉDICTION VERT RAIKA</div>
+            <div id="status-head" class="status-banner">ANALYSE EN COURS...</div>
             <div id="prediction-list"></div>
             <button style="width:100%; padding:15px; margin-top:20px; border-radius:12px; border:none; background:#444; color:white; font-weight:bold;" onclick="go('p-home', 'nav-home')">HIVERINA</button>
         </div>
@@ -66,7 +82,7 @@
 
     <nav>
         <div id="nav-home" class="nav-item nav-active" onclick="go('p-home', 'nav-home')">🏠</div>
-        <div class="nav-item">📊</div>
+        <div id="nav-stats" class="nav-item" onclick="go('p-stats', 'nav-stats')">📊</div>
         <div id="nav-target" class="nav-item" onclick="go('p-result', 'nav-target')">🎯</div>
         <div id="nav-hist" class="nav-item" onclick="go('p-history', 'nav-hist')">📜</div>
     </nav>
@@ -82,8 +98,9 @@
             if(pId === 'p-history') renderHistory();
         }
 
-        function mifidy(t) { focus = t; document.getElementById('box-time').classList.toggle('selected', t==='time'); document.getElementById('box-hex').classList.toggle('selected', t==='hex'); }
+        function mifidy(t) { focus = t; document.getElementById('box-time').className = t==='time'?'input-box selected':'input-box'; document.getElementById('box-hex').className = t==='hex'?'input-box selected':'input-box'; }
         function press(v) { if(focus==='time' && tData.length<6) tData+=v; else if(focus==='hex' && hData.length<6) hData+=v; renderInput(); }
+        function mamafa() { if(focus==='time') tData=""; else hData=""; renderInput(); }
         function renderInput() { 
             document.getElementById('box-time').innerText = tData.match(/.{1,2}/g)?.join(' : ') || "00 : 00 : 00"; 
             document.getElementById('box-hex').innerText = hData || "HEX CODE"; 
@@ -91,36 +108,61 @@
 
         function hikajy() {
             const list = document.getElementById('prediction-list');
+            const head = document.getElementById('status-head');
             go('p-result', 'nav-target');
-            list.innerHTML = "";
-            for(let i=1; i<=3; i++) {
-                let d = new Date(); d.setMinutes(d.getMinutes() + (i * 3));
-                let timeStr = d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0')+":"+Math.floor(Math.random()*60).toString().padStart(2,'0');
-                let tips = ["Fotoana tsara hidirana", "Tandremo ny manga misesy", "Aza adino ny Cashout"];
-                let r = (11+i).toFixed(2); let g = (14+i).toFixed(2); let p = (91+i).toFixed(2);
-                
-                list.innerHTML += `
-                    <div class="pred-item">
-                        <span class="pred-badge">💚 TOUR VERT</span>
-                        <div class="pred-time">${timeStr}</div>
-                        <div class="pred-values">
-                            <span style="color:#ff4d4d">❤️ ${r}x</span> <span style="color:#555">🖤 ${g}x</span> <span style="color:#ff79c6">💖 ${p}x</span>
+            
+            let hexNum = parseInt(hData, 16) || 1;
+            let timeNum = parseInt(tData) || 1;
+            let seed = hexNum + timeNum;
+
+            setTimeout(() => {
+                list.innerHTML = "";
+                let isVertOverall = (seed % 5 === 0);
+                head.innerText = isVertOverall ? "✅🔥 PRÉDICTION VERT RAIKA" : "⚠️ CYCLE VARIABLE";
+                head.style.background = isVertOverall ? "#2ecc71" : "#f39c12";
+
+                for(let i=1; i<=3; i++) {
+                    let calcSeed = seed + (i * 1234);
+                    let resultType = calcSeed % 3; 
+                    let d = new Date(); d.setMinutes(d.getMinutes() + (i * 4));
+                    let timeStr = d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0')+":"+(calcSeed%60).toString().padStart(2,'0');
+                    
+                    let label = "TOUR TSARA"; let col = "#9b59b6";
+                    let r = (2 + (calcSeed % 5)).toFixed(2);
+                    let g = (5 + (calcSeed % 4)).toFixed(2);
+                    let p = (10 + (calcSeed % 20)).toFixed(2);
+
+                    if(resultType === 0) { label = "TOUR RATSY"; col = "#3498db"; r=(1.1).toFixed(2); g=(1.4).toFixed(2); p=(1.9).toFixed(2); }
+                    else if(resultType === 2 || isVertOverall) { label = "TOUR VERT"; col = "#2ecc71"; r=(12+i).toFixed(2); g=(15+i).toFixed(2); p=(90+i).toFixed(2); }
+
+                    list.innerHTML += `
+                        <div class="pred-item" style="border-left: 5px solid ${col}">
+                            <span class="pred-badge" style="border:1px solid ${col}; color:${col}">${label}</span>
+                            <div class="pred-time" style="color:${col}">${timeStr}</div>
+                            <div class="pred-values">
+                                <span style="color:#ff4d4d">❤️ ${r}x</span> <span style="color:#555">🖤 ${g}x</span> <span style="color:#ff79c6">💖 ${p}x</span>
+                            </div>
                         </div>
-                        <div class="pred-tip">💡 ${tips[i-1]}</div>
-                    </div>`;
-                history.unshift({time: timeStr, r: r, g: g, p: p});
-            }
+                    `;
+                    // Tehirizina ny côte 3 ato amin'ny history
+                    history.unshift({time: timeStr, r: r, g: g, p: p, label: label, col: col});
+                }
+            }, 800);
         }
 
         function renderHistory() {
+            // Mivoaka daholo ny côte 3 isaky ny tour ato amin'ny Historique
             document.getElementById('hist-list').innerHTML = history.map(h => `
-                <div class="pred-item" style="background:#161616; border-color:#333; color:white;">
-                    <span class="pred-badge">💚 TOUR VERT</span>
-                    <div class="pred-time" style="font-size:1.2rem;">${h.time}</div>
+                <div class="hist-item" style="border-left: 5px solid ${h.col}">
+                    <span class="pred-badge" style="border:1px solid ${h.col}; color:${h.col}">${h.label}</span>
+                    <div style="font-weight:bold; font-size:1.1rem; color:${h.col}">${h.time}</div>
                     <div class="pred-values">
-                        <span style="color:#ff4d4d">❤️ ${h.r}x</span> <span style="color:#888">🖤 ${h.g}x</span> <span style="color:#ff79c6">💖 ${h.p}x</span>
+                        <span style="color:#ff4d4d">❤️ ${h.r}x</span> 
+                        <span style="color:#555">🖤 ${h.g}x</span> 
+                        <span style="color:#ff79c6">💖 ${h.p}x</span>
                     </div>
-                </div>`).join('');
+                </div>
+            `).join('');
         }
     </script>
 </body>

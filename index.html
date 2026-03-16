@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boss Bet Pro - Optimized</title>
+    <title>Boss Bet Pro - Classic</title>
     <style>
         :root { --red: #ff3131; --dark: #0a0a0a; --card: #161616; --grey: #222; --text: #ffffff; --green: #2ecc71; }
         body { background: var(--dark); color: var(--text); font-family: 'Arial', sans-serif; margin: 0; padding: 0; }
@@ -11,23 +11,28 @@
         .page { display: none; }
         .active { display: block; }
         
+        /* Input Screen */
         .card { background: var(--card); border-radius: 20px; padding: 25px 15px; border: 1px solid #333; margin-bottom: 20px; }
         .label { font-size: 0.75rem; color: #888; margin-bottom: 10px; display: block; text-align: left; padding-left: 10px; }
         .input-box { background: rgba(0,0,0,0.1); padding: 18px; border-radius: 12px; margin-bottom: 15px; font-size: 1.5rem; border: 2px solid #333; color: var(--text); cursor: pointer; font-family: monospace; text-align: center; }
-        .selected { border-color: var(--red); box-shadow: 0 0 10px rgba(255, 49, 49, 0.2); }
+        .selected { border-color: var(--red); }
 
         .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
-        .key { background: var(--grey); padding: 18px 5px; border-radius: 12px; border: none; color: var(--text); font-weight: bold; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
-        .key:active { background: #444; }
-        .btn-vinavina { width: 100%; background: var(--red); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 1.1rem; }
+        .key { background: var(--grey); padding: 18px 5px; border-radius: 12px; border: none; color: var(--text); font-weight: bold; font-size: 1.2rem; cursor: pointer; }
+        
+        /* Action Buttons */
+        .action-row { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-famafana { flex: 1; background: #555; color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .btn-vinavina { flex: 1.5; background: var(--red); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
+        /* Results */
         .status-banner { background: var(--green); color: black; padding: 12px; border-radius: 10px; font-weight: bold; margin-bottom: 20px; }
         .pred-item { background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 1px solid #ddd; text-align: left; color: #333; }
         .pred-time { font-size: 1.8rem; font-weight: bold; color: var(--green); font-family: monospace; }
         .pred-badge { border: 1px solid var(--green); color: var(--green); padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: bold; float: right; }
         .pred-values { display: flex; gap: 15px; margin-top: 8px; font-weight: bold; font-size: 0.9rem; border-top: 1px solid #eee; padding-top: 8px; }
-        .pred-tip { font-size: 0.7rem; color: #777; margin-top: 8px; font-style: italic; }
 
+        /* Navigation */
         nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: var(--dark); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
         .nav-item { font-size: 1.6rem; cursor: pointer; opacity: 0.3; }
         .nav-active { opacity: 1; color: var(--red); }
@@ -43,13 +48,18 @@
                 <div id="box-time" class="input-box selected" onclick="mifidy('time')">00 : 00</div>
                 <span class="label">SERVER HASH (HEX CODE)</span>
                 <div id="box-hex" class="input-box" onclick="mifidy('hex')">15B69C</div>
+                
                 <div class="keypad">
                     <button class="key" onclick="press('1')">1</button><button class="key" onclick="press('2')">2</button><button class="key" onclick="press('3')">3</button><button class="key" onclick="press('A')">A</button>
                     <button class="key" onclick="press('4')">4</button><button class="key" onclick="press('5')">5</button><button class="key" onclick="press('6')">6</button><button class="key" onclick="press('B')">B</button>
                     <button class="key" onclick="press('7')">7</button><button class="key" onclick="press('8')">8</button><button class="key" onclick="press('9')">9</button><button class="key" onclick="press('C')">C</button>
                     <button class="key" onclick="press('D')">D</button><button class="key" onclick="press('0')">0</button><button class="key" onclick="press('E')">E</button><button class="key" onclick="press('F')">F</button>
                 </div>
-                <button class="btn-vinavina" onclick="hikajy()">VINAVINA</button>
+
+                <div class="action-row">
+                    <button class="btn-famafana" onclick="mamafa()">FAFANA</button>
+                    <button class="btn-vinavina" onclick="hikajy()">VINAVINA</button>
+                </div>
             </div>
         </div>
 
@@ -84,7 +94,19 @@
         }
 
         function mifidy(t) { focus = t; document.getElementById('box-time').classList.toggle('selected', t==='time'); document.getElementById('box-hex').classList.toggle('selected', t==='hex'); }
-        function press(v) { if(focus==='time' && tData.length<4) tData+=v; else if(focus==='hex' && hData.length<6) hData+=v; renderInput(); }
+        
+        function press(v) { 
+            if(focus==='time' && tData.length<4) tData+=v; 
+            else if(focus==='hex' && hData.length<6) hData+=v; 
+            renderInput(); 
+        }
+
+        function mamafa() { 
+            if(focus==='time') tData = ""; 
+            else hData = ""; 
+            renderInput(); 
+        }
+
         function renderInput() { 
             document.getElementById('box-time').innerText = tData.match(/.{1,2}/g)?.join(' : ') || "00 : 00"; 
             document.getElementById('box-hex').innerText = hData || "HEX CODE"; 
@@ -94,22 +116,17 @@
             const list = document.getElementById('prediction-list');
             go('p-result', 'nav-target');
             list.innerHTML = "";
-
-            // ALGORITHM CORE: Ampiasaina ny Hex sy Time ho "Seed"
             let seedBase = parseInt(hData, 16) || 12345;
             let timeVal = parseInt(tData) || 0;
 
             for(let i=1; i<=3; i++) {
-                // Kajy tsy miankina amin'ny "random" fa amin'ny tarehimarika ampidirinao
                 let calc = (seedBase + timeVal + (i * 150)) % 1000;
                 let d = new Date(); d.setMinutes(d.getMinutes() + (i * 4));
                 let timeStr = d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0')+":"+(calc % 60).toString().padStart(2,'0');
                 
-                // Famolavolana ny côte ❤️, 🖤, 💖
                 let r = (10 + (calc % 5)).toFixed(2); 
                 let g = (14 + (calc % 7)).toFixed(2); 
                 let p = (90 + (calc % 15)).toFixed(2);
-                let tips = ["Andraso ny fivadihan'ny cycle", "Aza adino ny Cashout amin'ny 2.00x", "Fotoana tsara indrindra ity"];
 
                 list.innerHTML += `
                     <div class="pred-item">
@@ -118,7 +135,6 @@
                         <div class="pred-values">
                             <span style="color:#ff4d4d">❤️ ${r}x</span> <span style="color:#555">🖤 ${g}x</span> <span style="color:#ff79c6">💖 ${p}x</span>
                         </div>
-                        <div class="pred-tip">💡 ${tips[i-1]}</div>
                     </div>`;
                 history.unshift({time: timeStr, r: r, g: g, p: p});
             }

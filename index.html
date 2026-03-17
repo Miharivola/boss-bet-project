@@ -3,167 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boss Bet Pro - Algorithm Fix</title>
+    <title>Boss Bet Pro - Multiplier Mode</title>
     <style>
         :root { --red: #ff3131; --dark: #0a0a0a; --card: #161616; --grey: #222; --text: #ffffff; --green: #2ecc71; --blue: #3498db; --pink: #ff79c6; }
-        body { background: var(--dark); color: var(--text); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background: var(--dark); color: var(--text); font-family: sans-serif; margin: 0; padding: 0; }
         .container { max-width: 450px; margin: auto; padding: 15px; padding-bottom: 100px; text-align: center; }
-        .page { display: none; animation: slideIn 0.3s ease-out; }
+        .page { display: none; }
         .active { display: block; }
-        @keyframes slideIn { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
-        /* UI Elements */
-        .card { background: var(--card); border-radius: 20px; padding: 25px 15px; border: 1px solid #333; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .input-box { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; margin-bottom: 15px; font-size: 1.6rem; border: 2px solid #444; color: var(--text); cursor: pointer; font-family: 'Courier New', monospace; letter-spacing: 2px; }
+        .card { background: var(--card); border-radius: 20px; padding: 25px 15px; border: 1px solid #333; margin-bottom: 20px; }
+        .label { font-size: 0.75rem; color: #888; margin-bottom: 10px; display: block; text-align: left; padding-left: 10px; }
+        .input-box { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; margin-bottom: 15px; font-size: 1.6rem; border: 2px solid #444; color: var(--text); cursor: pointer; font-family: monospace; }
         .selected { border-color: var(--red); background: rgba(255,49,49,0.05); }
-
-        .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .key { background: var(--grey); padding: 20px 5px; border-radius: 12px; border: none; color: var(--text); font-weight: bold; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
-        .key:active { background: var(--red); transform: scale(0.95); }
-        
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .key { background: var(--grey); padding: 20px; border-radius: 12px; border: none; color: var(--text); font-weight: bold; font-size: 1.2rem; cursor: pointer; }
         .action-row { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-f { flex: 1; background: #444; color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-        .btn-v { flex: 1.5; background: var(--red); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(255,49,49,0.3); }
-
-        /* Prediction Styles */
-        .p-item { background: white; border-radius: 18px; padding: 18px; margin-bottom: 15px; text-align: left; color: #111; position: relative; overflow: hidden; }
-        .p-time { font-size: 1.9rem; font-weight: 900; font-family: monospace; display: block; margin-bottom: 5px; }
-        .p-badge { position: absolute; top: 15px; right: 15px; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
-        .p-vals { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 10px; border-top: 1px dashed #ccc; font-weight: 800; }
-
-        /* Nav Bar */
-        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: #0d0d0d; display: flex; justify-content: space-around; padding: 18px 0; border-top: 1px solid #222; z-index: 1000; }
-        .nav-i { font-size: 1.6rem; cursor: pointer; opacity: 0.3; transition: 0.3s; color: white; }
-        .nav-active { opacity: 1; color: var(--red); transform: translateY(-5px); }
+        .btn-f { flex: 1; background: #444; color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; }
+        .btn-v { flex: 1.5; background: var(--red); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; }
+        .p-item { background: white; border-radius: 18px; padding: 18px; margin-bottom: 15px; text-align: left; color: #111; position: relative; border-left: 6px solid; }
+        .p-time { font-size: 1.8rem; font-weight: 900; font-family: monospace; }
+        .p-badge { position: absolute; top: 15px; right: 15px; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; border: 1px solid; }
+        .p-vals { display: flex; justify-content: space-between; margin-top: 12px; border-top: 1px dashed #ccc; padding-top: 10px; font-weight: bold; }
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: #0d0d0d; display: flex; justify-content: space-around; padding: 18px 0; border-top: 1px solid #222; }
+        .nav-i { font-size: 1.6rem; cursor: pointer; opacity: 0.3; color: white; }
+        .nav-active { opacity: 1; color: var(--red); }
     </style>
 </head>
 <body>
-
     <div class="container">
         <div id="p-home" class="page active">
-            <h1 style="color:var(--red); letter-spacing:3px; margin: 20px 0;">BOSS BET PRO</h1>
+            <h1 style="color:var(--red); letter-spacing:3px;">BOSS BET PRO</h1>
             <div class="card">
+                <span class="label">LERA ANKEHITRINY (HH:MM)</span>
                 <div id="box-time" class="input-box selected" onclick="mifidy('time')">00 : 00</div>
-                <div id="box-hex" class="input-box" onclick="mifidy('hex')">15B69C</div>
-                
+                <span class="label">CÔTE AMBONY FARANY (Ex: 213.85)</span>
+                <div id="box-cote" class="input-box" onclick="mifidy('cote')">0.00</div>
                 <div class="keypad">
-                    <button class="key" onclick="press('1')">1</button><button class="key" onclick="press('2')">2</button><button class="key" onclick="press('3')">3</button><button class="key" onclick="press('A')">A</button>
-                    <button class="key" onclick="press('4')">4</button><button class="key" onclick="press('5')">5</button><button class="key" onclick="press('6')">6</button><button class="key" onclick="press('B')">B</button>
-                    <button class="key" onclick="press('7')">7</button><button class="key" onclick="press('8')">8</button><button class="key" onclick="press('9')">9</button><button class="key" onclick="press('C')">C</button>
-                    <button class="key" onclick="press('D')">D</button><button class="key" onclick="press('0')">0</button><button class="key" onclick="press('E')">E</button><button class="key" onclick="press('F')">F</button>
+                    <button class="key" onclick="press('1')">1</button><button class="key" onclick="press('2')">2</button><button class="key" onclick="press('3')">3</button>
+                    <button class="key" onclick="press('4')">4</button><button class="key" onclick="press('5')">5</button><button class="key" onclick="press('6')">6</button>
+                    <button class="key" onclick="press('7'))7</button><button class="key" onclick="press('8')">8</button><button class="key" onclick="press('9')">9</button>
+                    <button class="key" onclick="press('.')">.</button><button class="key" onclick="press('0')">0</button><button class="key" onclick="mamafa()">⌫</button>
                 </div>
-
                 <div class="action-row">
-                    <button class="btn-f" onclick="mamafa()">FAFANA</button>
+                    <button class="btn-f" onclick="tData='';cData='';renderInput()">FAFANA</button>
                     <button class="btn-v" onclick="hikajy()">VINAVINA</button>
                 </div>
             </div>
         </div>
-
         <div id="p-result" class="page">
-            <h2 style="color:var(--green); margin-bottom:20px;">🎯 VINAVINA VOALOHANY</h2>
+            <h2 style="color:var(--green)">🎯 VINAVINA VOALOHANY</h2>
             <div id="prediction-list"></div>
-            <button style="width:100%; padding:18px; margin-top:10px; border-radius:12px; border:none; background:#333; color:white; font-weight:bold; cursor:pointer;" onclick="go('p-home', 'nav-home')">HIVERINA</button>
+            <button style="width:100%; padding:18px; border-radius:12px; border:none; background:#333; color:white;" onclick="go('p-home')">HIVERINA</button>
         </div>
-
-        <div id="p-history" class="page">
-            <h2 style="color:var(--red)">📜 HISTORIQUE</h2>
-            <div id="hist-list"></div>
-        </div>
-        
-        <div id="p-stats" class="page"><h2 style="color:var(--blue)">📊 STATISTICS</h2><p style="color:#888">Mila Hex Code vao mipoitra ny statistika...</p></div>
+        <div id="p-history" class="page"><h2>📜 HISTORIQUE</h2><div id="hist-list"></div></div>
     </div>
-
     <nav>
         <div id="nav-home" class="nav-i nav-active" onclick="go('p-home', 'nav-home')">🏠</div>
-        <div id="nav-stats" class="nav-i" onclick="go('p-stats', 'nav-stats')">📊</div>
         <div id="nav-target" class="nav-i" onclick="go('p-result', 'nav-target')">🎯</div>
         <div id="nav-hist" class="nav-i" onclick="go('p-history', 'nav-hist')">📜</div>
     </nav>
-
     <script>
-        let focus = 'time'; let tData = ""; let hData = "15B69C"; let history = [];
-
+        let focus = 'time', tData = "", cData = "", history = [];
         function go(pId, nId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-i').forEach(n => n.classList.remove('nav-active'));
             document.getElementById(pId).classList.add('active');
             if(nId) document.getElementById(nId).classList.add('nav-active');
-            if(pId === 'p-history') renderHistory();
+            if(pId==='p-history') renderHistory();
         }
-
-        function mifidy(t) { 
-            focus = t; 
-            document.getElementById('box-time').classList.toggle('selected', t==='time'); 
-            document.getElementById('box-hex').classList.toggle('selected', t==='hex'); 
+        function mifidy(t) { focus = t; document.getElementById('box-time').classList.toggle('selected', t==='time'); document.getElementById('box-cote').classList.toggle('selected', t==='cote'); }
+        function press(v) { if(focus==='time' && tData.length<4) tData+=v; else if(focus==='cote' && cData.length<7) cData+=v; renderInput(); }
+        function mamafa() { if(focus==='time') tData = tData.slice(0, -1); else cData = cData.slice(0, -1); renderInput(); }
+        function renderInput() {
+            document.getElementById('box-time').innerText = tData.match(/.{1,2}/g)?.join(' : ') || "00 : 00";
+            document.getElementById('box-cote').innerText = cData || "0.00";
         }
-
-        function press(v) { 
-            if(focus==='time' && tData.length < 4) tData += v; 
-            else if(focus==='hex' && hData.length < 6) hData += v; 
-            renderInput(); 
-        }
-
-        function mamafa() { if(focus==='time') tData = ""; else hData = ""; renderInput(); }
-
-        function renderInput() { 
-            document.getElementById('box-time').innerText = tData.match(/.{1,2}/g)?.join(' : ') || "00 : 00"; 
-            document.getElementById('box-hex').innerText = hData || "HEX CODE"; 
-        }
-
         function hikajy() {
-            const list = document.getElementById('prediction-list');
-            go('p-result', 'nav-target');
-            list.innerHTML = "";
-            
-            // CORE ALGORITHM: Base Hexadecimal logic
-            let hexVal = parseInt(hData, 16) || 123456;
-            let timeVal = parseInt(tData) || 0;
-
+            const list = document.getElementById('prediction-list'); go('p-result', 'nav-target'); list.innerHTML = "";
+            let val = parseFloat(cData) || 1.00;
+            let timeBase = parseInt(tData) || 0;
             for(let i=1; i<=3; i++) {
-                // Formula fampifandanjana ny lera sy ny hex
-                let calc = (hexVal + timeVal + (i * 741)) % 1000;
-                let d = new Date(); d.setMinutes(d.getMinutes() + (i * 4) + (calc % 3));
-                let timeStr = d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0')+":"+(calc % 60).toString().padStart(2,'0');
-                
-                let label, col, r, g, p;
-
-                // Anti-Rafale Logic based on Calc remainder
-                if (calc % 10 < 3) { 
-                    label = "RAFALE BLEU"; col = "#3498db"; r="1.05"; g="1.18"; p="1.35"; 
-                } else if (calc % 15 > 12) { 
-                    label = "TOUR VERT"; col = "#2ecc71"; 
-                    r=(10.50 + (calc%5)/10).toFixed(2); g=(18.40 + (calc%7)/10).toFixed(2); p=(85.00 + (calc%9)).toFixed(2); 
-                } else if (calc % 8 < 2) { 
-                    label = "TOUR RATSY"; col = "#ff3131"; r="1.12"; g="1.25"; p="1.48"; 
-                } else {
-                    label = "TOUR TSARA"; col = "#9b59b6"; 
-                    r="2.10"; g=(4.20 + (calc%3)/10).toFixed(2); p=(12.50 + (calc%5)).toFixed(2); 
-                }
-
-                list.innerHTML += `
-                    <div class="p-item" style="border-left: 6px solid ${col}">
-                        <span class="p-badge" style="background:${col}22; color:${col}; border:1px solid ${col}">${label}</span>
-                        <span class="p-time" style="color:${col}">${timeStr}</span>
-                        <div class="p-vals">
-                            <span style="color:#ff3131">❤️ ${r}x</span> 
-                            <span style="color:#555">🖤 ${g}x</span> 
-                            <span style="color:#ff79c6">💖 ${p}x</span>
-                        </div>
-                    </div>`;
-                history.unshift({time: timeStr, r: r, g: g, p: p, label: label, col: col});
+                let calc = Math.floor((val * 137 + timeBase + i*500) % 100);
+                let d = new Date(); d.setMinutes(d.getMinutes() + (i * 4));
+                let timeStr = d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0');
+                let l, col, r, g, p;
+                if(calc < 30) { l="RAFALE BLEU"; col="#3498db"; r="1.05"; g="1.20"; p="1.45"; }
+                else if(calc > 80) { l="TOUR VERT"; col="#2ecc71"; r="20.50"; g="35.00"; p="110.00"; }
+                else { l="TOUR TSARA"; col="#9b59b6"; r="2.10"; g="4.50"; p="15.00"; }
+                list.innerHTML += `<div class="p-item" style="border-color:${col}">
+                    <span class="p-badge" style="color:${col}; border-color:${col}">${l}</span>
+                    <span class="p-time" style="color:${col}">${timeStr}:${(calc%60).toString().padStart(2,'0')}</span>
+                    <div class="p-vals"><span>❤️ ${r}x</span> <span>🖤 ${g}x</span> <span>💖 ${p}x</span></div></div>`;
+                history.unshift({time: timeStr, r: r, g: g, p: p, label: l, col: col});
             }
         }
-
         function renderHistory() {
-            document.getElementById('hist-list').innerHTML = history.slice(0, 10).map(h => `
-                <div class="p-item" style="background:#1a1a1a; border-left: 6px solid ${h.col}; color:white;">
-                    <span class="p-badge" style="border-color:${h.col}; color:${h.col}">${h.label}</span>
-                    <span style="font-weight:900; font-size:1.3rem; color:${h.col}">${h.time}</span>
-                    <div class="p-vals" style="border-top-color:#333; color:#ccc;">
-                        <span>❤️ ${h.r}x</span> <span>🖤 ${h.g}x</span> <span>💖 ${h.p}x</span>
-                    </div>
-                </div>`).join('');
+            document.getElementById('hist-list').innerHTML = history.slice(0, 10).map(h => `<div class="p-item" style="background:#1a1a1a; color:white; border-color:${h.col}">
+                <span style="font-weight:900; color:${h.col}">${h.time}</span> [${h.label}]<br>
+                ❤️ ${h.r}x | 🖤 ${h.g}x | 💖 ${h.p}x</div>`).join('');
         }
     </script>
 </body>

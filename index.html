@@ -3,29 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vitana Tsara - Final Version</title>
+    <title>Vitana Tsara - Fixed Input</title>
     <style>
         :root { --red: #ff3131; --dark: #0a0a0a; --card: #161616; --grey: #222; --text: #ffffff; --green: #2ecc71; --blue: #3498db; --pink: #ff79c6; }
-        body { background: var(--dark); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
-        .container { max-width: 450px; margin: auto; padding: 15px; padding-bottom: 100px; text-align: center; }
+        body { background: var(--dark); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
+        .container { max-width: 450px; margin: auto; padding: 15px; padding-bottom: 120px; text-align: center; }
         .page { display: none; } .active { display: block; }
-        .card { background: var(--card); border-radius: 20px; padding: 25px 15px; border: 1px solid #333; margin-bottom: 20px; }
-        .label { font-size: 0.8rem; color: #888; margin-bottom: 10px; display: block; text-align: left; font-weight: bold; }
-        .input-box { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 12px; margin-bottom: 15px; font-size: 1.8rem; border: 2px solid #444; color: var(--text); cursor: pointer; font-family: 'Courier New', monospace; letter-spacing: 2px; }
-        .selected { border-color: var(--red); box-shadow: 0 0 10px var(--red); }
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .key { background: var(--grey); padding: 20px; border-radius: 12px; border: none; color: var(--text); font-weight: bold; font-size: 1.4rem; cursor: pointer; }
-        .btn-v { width: 100%; background: var(--red); color: white; border: none; padding: 20px; border-radius: 15px; font-weight: bold; font-size: 1.3rem; margin-top: 20px; cursor: pointer; }
         
-        /* STYLE PREDICTION & HISTORIQUE */
+        /* INPUT SECTION */
+        .card { background: var(--card); border-radius: 20px; padding: 20px 15px; border: 1px solid #333; margin-bottom: 20px; position: relative; z-index: 1; }
+        .label { font-size: 0.8rem; color: #888; margin-bottom: 10px; display: block; text-align: left; font-weight: bold; }
+        .input-box { background: rgba(0,0,0,0.5); padding: 18px; border-radius: 12px; margin-bottom: 15px; font-size: 1.8rem; border: 2px solid #444; color: var(--text); cursor: pointer; font-family: 'Courier New', monospace; letter-spacing: 2px; min-height: 40px; display: flex; align-items: center; justify-content: center; }
+        .selected { border-color: var(--red); box-shadow: 0 0 10px var(--red); background: rgba(255,49,49,0.05); }
+
+        /* KEYPAD SECTION - FIXED INTERACTION */
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; position: relative; z-index: 10; }
+        .key { background: var(--grey); padding: 22px; border-radius: 12px; border: none; color: var(--text); font-weight: bold; font-size: 1.5rem; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .key:active { background: #444; transform: scale(0.95); }
+
+        .btn-v { width: 100%; background: var(--red); color: white; border: none; padding: 20px; border-radius: 15px; font-weight: bold; font-size: 1.3rem; margin-top: 20px; cursor: pointer; z-index: 10; position: relative; }
+
+        /* RESULT & HISTORIQUE */
         .p-item { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; text-align: left; color: #111; position: relative; border-left: 10px solid; }
         .p-time { font-size: 2.2rem; font-weight: 900; font-family: 'Courier New', monospace; color: #000; }
         .p-score { position: absolute; top: 15px; right: 15px; text-align: right; }
         .p-percent { font-size: 1.4rem; font-weight: 900; display: block; }
         .p-vals { display: flex; justify-content: space-between; margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 10px; font-weight: bold; }
 
-        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: #0d0d0d; display: flex; justify-content: space-around; padding: 18px 0; border-top: 1px solid #222; }
-        .nav-i { font-size: 1.6rem; cursor: pointer; opacity: 0.3; color: white; } .nav-active { opacity: 1; color: var(--red); }
+        /* NAVIGATION FIXED */
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: #0d0d0d; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; z-index: 100; }
+        .nav-i { font-size: 1.8rem; cursor: pointer; opacity: 0.3; color: white; padding: 10px; }
+        .nav-active { opacity: 1; color: var(--red); }
     </style>
 </head>
 <body>
@@ -35,15 +43,24 @@
             <div class="card">
                 <span class="label">LERA (HH:MM)</span>
                 <div id="box-time" class="input-box selected" onclick="mifidy('time')">00 : 00</div>
-                <span class="label">COTE AMBONY (Ex: 213.85)</span>
+                <span class="label">COTE AMBONY (Ex: 5.10)</span>
                 <div id="box-cote" class="input-box" onclick="mifidy('cote')">0.00</div>
+                
                 <div class="keypad">
-                    <button class="key" onclick="press('1')">1</button><button class="key" onclick="press('2')">2</button><button class="key" onclick="press('3')">3</button>
-                    <button class="key" onclick="press('4')">4</button><button class="key" onclick="press('5')">5</button><button class="key" onclick="press('6')">6</button>
-                    <button class="key" onclick="press('7')">7</button><button class="key" onclick="press('8')">8</button><button class="key" onclick="press('9')">9</button>
-                    <button class="key" onclick="press('.')">.</button><button class="key" onclick="press('0')">0</button><button class="key" onclick="mamafa()">⌫</button>
+                    <button class="key" onclick="press('1')">1</button>
+                    <button class="key" onclick="press('2')">2</button>
+                    <button class="key" onclick="press('3')">3</button>
+                    <button class="key" onclick="press('4')">4</button>
+                    <button class="key" onclick="press('5')">5</button>
+                    <button class="key" onclick="press('6')">6</button>
+                    <button class="key" onclick="press('7')">7</button>
+                    <button class="key" onclick="press('8')">8</button>
+                    <button class="key" onclick="press('9')">9</button>
+                    <button class="key" onclick="press('.')">.</button>
+                    <button class="key" onclick="press('0')">0</button>
+                    <button class="key" onclick="mamafa()">⌫</button>
                 </div>
-                <button class="btn-v" onclick="hikajy()">CALCULER ANALYTICS</button>
+                <button class="btn-v" onclick="hikajy()">ANALYZER SIGNAL</button>
             </div>
         </div>
 
@@ -67,19 +84,34 @@
 
     <script>
         let focus = 'time', tData = "", cData = "", historyData = [];
-        
+
         function go(pId, nId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-i').forEach(n => n.classList.remove('nav-active'));
             document.getElementById(pId).classList.add('active');
             if(nId) document.getElementById(nId).classList.add('nav-active');
             if(pId === 'p-history') renderHistory();
+            window.scrollTo(0,0);
         }
 
-        function mifidy(t) { focus = t; document.getElementById('box-time').classList.toggle('selected', t==='time'); document.getElementById('box-cote').classList.toggle('selected', t==='cote'); }
-        function press(v) { if(focus==='time' && tData.length<4) tData+=v; else if(focus==='cote' && cData.length<8) cData+=v; renderInput(); }
-        function mamafa() { if(focus==='time') tData = tData.slice(0, -1); else cData = cData.slice(0, -1); renderInput(); }
-        
+        function mifidy(t) { 
+            focus = t; 
+            document.getElementById('box-time').classList.toggle('selected', t==='time'); 
+            document.getElementById('box-cote').classList.toggle('selected', t==='cote'); 
+        }
+
+        function press(v) { 
+            if(focus==='time' && tData.length < 4) tData += v; 
+            else if(focus==='cote' && cData.length < 8) cData += v; 
+            renderInput(); 
+        }
+
+        function mamafa() { 
+            if(focus==='time') tData = tData.slice(0, -1); 
+            else cData = cData.slice(0, -1); 
+            renderInput(); 
+        }
+
         function renderInput() {
             let tv = tData.length >= 3 ? tData.slice(0, 2) + " : " + tData.slice(2) : (tData || "00 : 00");
             document.getElementById('box-time').innerText = tv;
@@ -89,14 +121,14 @@
         function hikajy() {
             if(!tData || !cData) return alert("Fenoy ny lera sy ny côte!");
             const list = document.getElementById('prediction-list');
-            list.innerHTML = ""; go('p-result', 'nav-target');
-
+            list.innerHTML = ""; 
+            
             let val = parseFloat(cData);
             let timeBase = parseInt(tData);
 
             for(let i=1; i<=3; i++) {
                 let seed = (val * (i + 0.73)) + (timeBase / (i + 0.19));
-                let noise = Math.abs(Math.cos(seed) * 100);
+                let noise = Math.abs(Math.sin(seed) * 100);
                 let confidence = Math.floor(45 + (noise % 53)); 
                 
                 let d = new Date();
@@ -130,15 +162,15 @@
                     </div>`;
                 
                 list.innerHTML += itemHTML;
-                // Tehirizina ao amin'ny historique
                 historyData.unshift({html: itemHTML});
             }
-            if(historyData.length > 15) historyData = historyData.slice(0, 15);
+            if(historyData.length > 20) historyData = historyData.slice(0, 20);
+            go('p-result', 'nav-target');
         }
 
         function renderHistory() {
-            const hList = document 3rd.getElementById('history-list');
-            hList.innerHTML = historyData.length > 0 ? historyData.map(h => h.html).join('') : "<p style='opacity:0.5'>Tsy mbola misy historique.</p>";
+            const hList = document.getElementById('history-list');
+            hList.innerHTML = historyData.length > 0 ? historyData.map(h => h.html).join('') : "<p style='opacity:0.5; margin-top:50px;'>Tsy mbola misy historique.</p>";
         }
     </script>
 </body>

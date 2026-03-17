@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vitana Tsara - Advanced Algorithm</title>
+    <title>Vitana Tsara - Final Version</title>
     <style>
         :root { --red: #ff3131; --dark: #0a0a0a; --card: #161616; --grey: #222; --text: #ffffff; --green: #2ecc71; --blue: #3498db; --pink: #ff79c6; }
         body { background: var(--dark); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
@@ -17,11 +17,15 @@
         .key { background: var(--grey); padding: 20px; border-radius: 12px; border: none; color: var(--text); font-weight: bold; font-size: 1.4rem; cursor: pointer; }
         .btn-v { width: 100%; background: var(--red); color: white; border: none; padding: 20px; border-radius: 15px; font-weight: bold; font-size: 1.3rem; margin-top: 20px; cursor: pointer; }
         
+        /* STYLE PREDICTION & HISTORIQUE */
         .p-item { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; text-align: left; color: #111; position: relative; border-left: 10px solid; }
         .p-time { font-size: 2.2rem; font-weight: 900; font-family: 'Courier New', monospace; color: #000; }
         .p-score { position: absolute; top: 15px; right: 15px; text-align: right; }
         .p-percent { font-size: 1.4rem; font-weight: 900; display: block; }
         .p-vals { display: flex; justify-content: space-between; margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 10px; font-weight: bold; }
+
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: #0d0d0d; display: flex; justify-content: space-around; padding: 18px 0; border-top: 1px solid #222; }
+        .nav-i { font-size: 1.6rem; cursor: pointer; opacity: 0.3; color: white; } .nav-active { opacity: 1; color: var(--red); }
     </style>
 </head>
 <body>
@@ -42,19 +46,40 @@
                 <button class="btn-v" onclick="hikajy()">CALCULER ANALYTICS</button>
             </div>
         </div>
+
         <div id="p-result" class="page">
-            <h2 style="color:var(--green)">🎯 ANALYSE DYNAMIQUE</h2>
+            <h2 style="color:var(--green)">🎯 VINAVINA VOALOHANY</h2>
             <div id="prediction-list"></div>
-            <button class="btn-v" style="background:#333;" onclick="go('p-home')">HIVERINA</button>
+            <button class="btn-v" style="background:#333;" onclick="go('p-home', 'nav-home')">HIVERINA</button>
+        </div>
+
+        <div id="p-history" class="page">
+            <h2 style="color:var(--pink)">📜 HISTORIQUE RECENT</h2>
+            <div id="history-list"></div>
         </div>
     </div>
 
+    <nav>
+        <div id="nav-home" class="nav-i nav-active" onclick="go('p-home', 'nav-home')">🏠</div>
+        <div id="nav-target" class="nav-i" onclick="go('p-result', 'nav-target')">🎯</div>
+        <div id="nav-hist" class="nav-i" onclick="go('p-history', 'nav-hist')">📜</div>
+    </nav>
+
     <script>
-        let focus = 'time', tData = "", cData = "";
-        function go(pId) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(pId).classList.add('active'); }
+        let focus = 'time', tData = "", cData = "", historyData = [];
+        
+        function go(pId, nId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-i').forEach(n => n.classList.remove('nav-active'));
+            document.getElementById(pId).classList.add('active');
+            if(nId) document.getElementById(nId).classList.add('nav-active');
+            if(pId === 'p-history') renderHistory();
+        }
+
         function mifidy(t) { focus = t; document.getElementById('box-time').classList.toggle('selected', t==='time'); document.getElementById('box-cote').classList.toggle('selected', t==='cote'); }
         function press(v) { if(focus==='time' && tData.length<4) tData+=v; else if(focus==='cote' && cData.length<8) cData+=v; renderInput(); }
         function mamafa() { if(focus==='time') tData = tData.slice(0, -1); else cData = cData.slice(0, -1); renderInput(); }
+        
         function renderInput() {
             let tv = tData.length >= 3 ? tData.slice(0, 2) + " : " + tData.slice(2) : (tData || "00 : 00");
             document.getElementById('box-time').innerText = tv;
@@ -64,46 +89,56 @@
         function hikajy() {
             if(!tData || !cData) return alert("Fenoy ny lera sy ny côte!");
             const list = document.getElementById('prediction-list');
-            list.innerHTML = ""; go('p-result');
+            list.innerHTML = ""; go('p-result', 'nav-target');
 
             let val = parseFloat(cData);
             let timeBase = parseInt(tData);
 
             for(let i=1; i<=3; i++) {
-                // REAL ALGORITHM: Seed based on decimal chaos
                 let seed = (val * (i + 0.73)) + (timeBase / (i + 0.19));
                 let noise = Math.abs(Math.cos(seed) * 100);
-                let confidence = Math.floor(40 + (noise % 58)); 
+                let confidence = Math.floor(45 + (noise % 53)); 
                 
                 let d = new Date();
-                let wait = Math.floor((noise % 8) + (i * 5));
+                let wait = Math.floor((noise % 8) + (i * 6));
                 d.setMinutes(d.getMinutes() + wait);
-                let timeStr = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
+                let hourStr = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
+                let secStr = (Math.floor(noise*10)%60).toString().padStart(2,'0');
+                let fullTime = hourStr + ":" + secStr;
 
-                // Dynamic multipliers - No more static values
-                let r = (1.85 + (noise / 50)).toFixed(2);
-                let g = (4.20 + (noise / 15)).toFixed(2);
-                let p = (15.00 + (noise * 1.5)).toFixed(2);
+                let r = (1.90 + (noise / 45)).toFixed(2);
+                let g = (4.50 + (noise / 12)).toFixed(2);
+                let p = (confidence > 85) ? (80 + noise).toFixed(2) : (18.00 + (noise * 1.2)).toFixed(2);
                 
                 let label, col;
-                if(confidence > 85) { label="TOP SIGNAL"; col="#2ecc71"; p = (85 + noise).toFixed(2); }
-                else if(confidence > 60) { label="BON MOMENT"; col="#9b59b6"; }
-                else { label="PRUDENCE"; col="#3498db"; r="1.15"; g="1.40"; p="1.95"; }
+                if(confidence > 85) { label="TOP SIGNAL"; col="#2ecc71"; }
+                else if(confidence > 65) { label="BON MOMENT"; col="#9b59b6"; }
+                else { label="PRUDENCE"; col="#3498db"; r="1.18"; g="1.35"; p="2.10"; }
 
-                list.innerHTML += `
+                let itemHTML = `
                     <div class="p-item" style="border-left-color:${col}">
                         <div class="p-score">
                             <span style="font-size:0.7rem; font-weight:800; color:${col}">${label}</span>
                             <span class="p-percent" style="color:${col}">${confidence}%</span>
                         </div>
-                        <span class="p-time">${timeStr}:${(Math.floor(noise*10)%60).toString().padStart(2,'0')}</span>
+                        <span class="p-time">${fullTime}</span>
                         <div class="p-vals">
                             <span style="color:var(--red)">❤️ x${r}</span>
                             <span style="color:#666">🖤 x${g}</span>
                             <span style="color:var(--pink)">💖 x${p}</span>
                         </div>
                     </div>`;
+                
+                list.innerHTML += itemHTML;
+                // Tehirizina ao amin'ny historique
+                historyData.unshift({html: itemHTML});
             }
+            if(historyData.length > 15) historyData = historyData.slice(0, 15);
+        }
+
+        function renderHistory() {
+            const hList = document 3rd.getElementById('history-list');
+            hList.innerHTML = historyData.length > 0 ? historyData.map(h => h.html).join('') : "<p style='opacity:0.5'>Tsy mbola misy historique.</p>";
         }
     </script>
 </body>

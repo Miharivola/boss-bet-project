@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vitana Tsara - Real Algorithm</title>
+    <title>Vitana Tsara - Time Format Fix</title>
     <style>
         :root { --red: #ff3131; --dark: #0a0a0a; --card: #161616; --grey: #222; --text: #ffffff; --green: #2ecc71; --blue: #3498db; --pink: #ff79c6; }
         body { background: var(--dark); color: var(--text); font-family: sans-serif; margin: 0; padding: 0; }
@@ -11,17 +11,17 @@
         .page { display: none; } .active { display: block; }
         .card { background: var(--card); border-radius: 20px; padding: 25px 15px; border: 1px solid #333; margin-bottom: 20px; }
         .label { font-size: 0.75rem; color: #888; margin-bottom: 10px; display: block; text-align: left; padding-left: 10px; }
-        .input-box { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; margin-bottom: 15px; font-size: 1.6rem; border: 2px solid #444; color: var(--text); cursor: pointer; font-family: monospace; min-height: 40px; }
+        .input-box { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; margin-bottom: 15px; font-size: 1.8rem; border: 2px solid #444; color: var(--text); cursor: pointer; font-family: 'Courier New', monospace; min-height: 40px; letter-spacing: 2px; }
         .selected { border-color: var(--red); background: rgba(255,49,49,0.05); }
         .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .key { background: var(--grey); padding: 20px; border-radius: 12px; border: none; color: var(--text); font-weight: bold; font-size: 1.4rem; cursor: pointer; }
         .action-row { display: flex; gap: 10px; margin-top: 20px; }
         .btn-f { flex: 1; background: #444; color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; }
         .btn-v { flex: 1.5; background: var(--red); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-        .p-item { background: white; border-radius: 18px; padding: 18px; margin-bottom: 15px; text-align: left; color: #111; position: relative; border-left: 6px solid; }
-        .p-time { font-size: 1.8rem; font-weight: 900; font-family: monospace; }
-        .p-badge { position: absolute; top: 15px; right: 15px; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; border: 1px solid; }
-        .p-vals { display: flex; justify-content: space-between; margin-top: 12px; border-top: 1px dashed #ccc; padding-top: 10px; font-weight: bold; }
+        .p-item { background: white; border-radius: 18px; padding: 18px; margin-bottom: 15px; text-align: left; color: #111; position: relative; border-left: 8px solid; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .p-time { font-size: 2rem; font-weight: 900; font-family: monospace; color: #000; }
+        .p-badge { position: absolute; top: 15px; right: 15px; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; border: 1px solid; }
+        .p-vals { display: flex; justify-content: space-between; margin-top: 15px; border-top: 2px dashed #eee; padding-top: 12px; font-weight: bold; font-size: 1.1rem; }
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: #0d0d0d; display: flex; justify-content: space-around; padding: 18px 0; border-top: 1px solid #222; }
         .nav-i { font-size: 1.6rem; cursor: pointer; opacity: 0.3; color: white; } .nav-active { opacity: 1; color: var(--red); }
     </style>
@@ -29,11 +29,11 @@
 <body>
     <div class="container">
         <div id="p-home" class="page active">
-            <h1 style="color:var(--red); letter-spacing:3px;">Vitana tsara</h1>
+            <h1 style="color:var(--red); letter-spacing:3px;">VITANA TSARA</h1>
             <div class="card">
-                <span class="label">LERA (HHMM)</span>
-                <div id="box-time" class="input-box selected" onclick="mifidy('time')">0000</div>
-                <span class="label">CÔTE AVY AO AMIN'NY HISTORIQUE</span>
+                <span class="label">LERA FIAINGANA (HH : MM)</span>
+                <div id="box-time" class="input-box selected" onclick="mifidy('time')">00 : 00</div>
+                <span class="label">CÔTE AMBONY FARANY (Ex: 10)</span>
                 <div id="box-cote" class="input-box" onclick="mifidy('cote')">0.00</div>
                 <div class="keypad">
                     <button class="key" onclick="press('1')">1</button><button class="key" onclick="press('2')">2</button><button class="key" onclick="press('3')">3</button>
@@ -50,7 +50,7 @@
         <div id="p-result" class="page">
             <h2 style="color:var(--green)">🎯 VINAVINA VOALOHANY</h2>
             <div id="prediction-list"></div>
-            <button style="width:100%; padding:18px; border-radius:12px; border:none; background:#333; color:white;" onclick="go('p-home', 'nav-home')">HIVERINA</button>
+            <button style="width:100%; padding:18px; border-radius:12px; border:none; background:#333; color:white; font-weight:bold;" onclick="go('p-home', 'nav-home')">HIVERINA</button>
         </div>
         <div id="p-history" class="page"><h2>📜 HISTORIQUE</h2><div id="hist-list"></div></div>
     </div>
@@ -72,8 +72,18 @@
         function mifidy(t) { focus = t; document.getElementById('box-time').classList.toggle('selected', t==='time'); document.getElementById('box-cote').classList.toggle('selected', t==='cote'); }
         function press(v) { if(focus==='time' && tData.length<4) tData+=v; else if(focus==='cote' && cData.length<8) cData+=v; renderInput(); }
         function mamafa() { if(focus==='time') tData = tData.slice(0, -1); else cData = cData.slice(0, -1); renderInput(); }
+        
         function renderInput() {
-            document.getElementById('box-time').innerText = tData || "0000";
+            // Nampiana ny fizarana HH : MM eto
+            let timeView = tData;
+            if (tData.length >= 3) {
+                timeView = tData.slice(0, 2) + " : " + tData.slice(2);
+            } else if (tData.length > 0) {
+                timeView = tData;
+            } else {
+                timeView = "00 : 00";
+            }
+            document.getElementById('box-time').innerText = timeView;
             document.getElementById('box-cote').innerText = cData || "0.00";
         }
 
@@ -81,41 +91,42 @@
             const list = document.getElementById('prediction-list'); 
             go('p-result', 'nav-target'); 
             list.innerHTML = "";
-            
-            // REAL ALGORITHM LOGIC
-            let coteNum = parseFloat(cData) || 1.0;
+            let coteNum = parseFloat(cData) || 1.25;
             let timeNum = parseInt(tData) || 1200;
-            let seed = (coteNum * 1.5) + (timeNum / 100);
-
+            
+            // Algorithm matanjaka kokoa (Scientific variation)
             for(let i=1; i<=3; i++) {
-                // Mampiasa Trigonometrie mba hiteraka variation
-                let hash = Math.abs(Math.sin(seed + i)) * 1000;
-                let minutePlus = (Math.floor(hash) % 7) + (i * 3);
+                let seed = (coteNum * (i + 1.618)) + (timeNum / (7 + i));
+                let hash = Math.abs(Math.sin(seed) * 10000);
                 
                 let d = new Date();
-                d.setMinutes(d.getMinutes() + minutePlus);
+                let minAdjust = (Math.floor(hash) % 8) + (i * 4);
+                d.setMinutes(d.getMinutes() + minAdjust);
                 let timeStr = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
 
-                // Dynamic Multipliers based on calculated hash
-                let r = (1.5 + (hash % 2)).toFixed(2);
-                let g = (4.0 + (hash % 6)).toFixed(2);
-                let p = (15.0 + (hash % 85)).toFixed(2);
-                
-                let l, col;
-                if(hash % 100 < 20) { l="RAFALE BLEU"; col="#3498db"; r="1.05"; g="1.20"; p="1.40"; }
-                else if(hash % 100 > 80) { l="TOUR VERT"; col="#2ecc71"; r=(10 + (hash%5)).toFixed(2); g=(20 + (hash%10)).toFixed(2); p=(90 + (hash%10)).toFixed(2); }
-                else { l="TOUR TSARA"; col="#9b59b6"; }
+                let r, g, p, label, col;
+                let chance = hash % 100;
+
+                if(chance < 20) { 
+                    label="RAFALE BLEU"; col="#3498db"; r="1.08"; g="1.25"; p="1.42"; 
+                } else if(chance > 82) { 
+                    label="TOUR VERT"; col="#2ecc71"; 
+                    r=(15.20 + (hash%5)).toFixed(2); g=(32.40 + (hash%10)).toFixed(2); p=(120.00 + (hash%50)).toFixed(2); 
+                } else { 
+                    label="TOUR TSARA"; col="#9b59b6"; 
+                    r=(2.15 + (hash%1)).toFixed(2); g=(5.40 + (hash%3)).toFixed(2); p=(18.60 + (hash%15)).toFixed(2); 
+                }
 
                 list.innerHTML += `<div class="p-item" style="border-color:${col}">
-                    <span class="p-badge" style="color:${col}; border-color:${col}">${l}</span>
+                    <span class="p-badge" style="color:${col}; border-color:${col}">${label}</span>
                     <span class="p-time" style="color:${col}">${timeStr}:${(Math.floor(hash)%60).toString().padStart(2,'0')}</span>
-                    <div class="p-vals"><span>❤️ ${r}x</span> <span>🖤 ${g}x</span> <span>💖 ${p}x</span></div></div>`;
-                history.unshift({time: timeStr, r: r, g: g, p: p, label: l, col: col});
+                    <div class="p-vals"><span style="color:#e74c3c">❤️ ${r}x</span> <span style="color:#2c3e50">🖤 ${g}x</span> <span style="color:#ff79c6">💖 ${p}x</span></div></div>`;
+                history.unshift({time: timeStr, r: r, g: g, p: p, label: label, col: col});
             }
         }
         function renderHistory() {
             document.getElementById('hist-list').innerHTML = history.slice(0, 10).map(h => `<div class="p-item" style="background:#1a1a1a; color:white; border-color:${h.col}">
-                <span style="font-weight:900; color:${h.col}">${h.time}</span> [${h.label}]<br>
+                <span style="font-weight:900; color:${h.col}; font-size:1.4rem;">${h.time}</span> <span style="font-size:0.8rem; opacity:0.7">[${h.label}]</span><br>
                 ❤️ ${h.r}x | 🖤 ${h.g}x | 💖 ${h.p}x</div>`).join('');
         }
     </script>
